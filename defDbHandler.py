@@ -24,12 +24,12 @@ def create_table(conn, tablename):
     conn.commit()
     return cursor
 
-def insert_student(conn, name, gender, birth_year, has_former_degree):
+def insert_items(conn, tablename, **items):
     """
-    Indsætter en ny studerende i databasen.
+    Indsætter en ny elementer i tabel.
     """
     cursor = conn.cursor()
-    query = "INSERT INTO test (name, gender, birth_year, has_former_degree) VALUES (?, ?, ?, ?)"
+    query = "INSERT INTO test (name, gender, **birth_year, has_former_degree) VALUES (?, ?, ?, ?)"
     cursor.execute(query, (name, gender, birth_year, has_former_degree))
     conn.commit()
     print(f"Succes! {name} er tilføjet.")
