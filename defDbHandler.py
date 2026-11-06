@@ -41,8 +41,23 @@ def create_main_tables(conn, tablename):
                 FOREIGN KEY (parentnr) REFERENCES mainmenu(nr)
             )
         """)
-        cursor.execute("")
         conn.commit()
+
+    elif tablename == "logdata":
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS logdata (
+                nr INTEGER PRIMARY KEY AUTOINCREMENT,
+                timestamp TEXT,
+                level TEXT,
+                event TEXT,
+                user TEXT,
+                src_ip TEXT,
+                dest_host TEXT,
+                dest_port INTEGER,
+                status TEXT,
+                msg LONGTEXT
+            )
+        """)
     return cursor
 
 def insert_menu_item(conn, tablename, nr, menuitem, description, parentnr=1):
@@ -60,6 +75,43 @@ def insert_menu_item(conn, tablename, nr, menuitem, description, parentnr=1):
     conn.commit()
     #print(f"Succes! {name} er tilføjet.")
     return cursor.lastrowid
+
+def insert_logdata(conn,tablename,  logdata):
+    """
+    denne funtkion modtager en dictionary(logdata) fra log_parser
+    som den tilføjer til databasen table logdata
+    :param conn:
+    :param tablename:
+    :param logdata:
+    :return: bool angående om der opstår en fejl eller ej
+    """
+    try:
+        cursor = conn.cursor()
+        if tablename == "logdata":
+            tabel_cleaner(conn, tablename)
+            query = "INSERT OR REPLACE INTO logdata (timestamp, level, event, user, src_ip, dest_host, dest_port, status, msg) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
+            cursor.execute(query,(logdata["timestamp"],logdata["level"],logdata["event"],logdata["user"],logdata["src_ip"],logdata["dest_host"],logdata["dest_port"],logdata["status"],logdata["msg"]))
+        conn.commit()
+        return True
+    except Error as e:
+        print(f"fejl ved inerting af logdata: {e}")
+        return False
+
+def tabel_cleaner(conn, tablename):
+    """
+    Sletter alt data et tabel indeholder
+    :param conn:
+    :param tablename:
+    :return: bool angående om der sker en fejl eller ej
+    """
+    try:
+        cursor = conn.cursor()
+        cursor.execute(f"Delete FROM {tablename}")
+        return True
+    except Error as e:
+        print(f"fejl under rensing af table: {e}")
+        return False
+
 
 def fetch_all_from_table(conn, tablename):
     """
@@ -96,6 +148,10 @@ if __name__ == "__main__":
     insert_menu_item(connection, "mainmenu", 1, "1 - INDLÆSNING AF LOGFIL", "Dette område giver dig mulighed for at indlæse en logfil.")
     insert_menu_item(connection, "submenu", 1, "1 - Indlæs den rå logfil ", "Indlæser den oprindelige logfil fra disken", 1)
     insert_menu_item(connection, "submenu", 2, "2 - Overfør logdata til database", "Genererer database elementer fra logfil", 1)
+
+    create_main_tables(connection, "logdata")
+    insert_logdata(connection, "logdata", {'timestamp': '2026-03-02T08:06:21', 'level': 'ALERT', 'event': 'MALWARE_SIGNATURE_MATCH', 'user': 'svc_backup', 'src_ip': '198.51.100.200', 'dest_host': 'mail01', 'dest_port': '445', 'status': 'BLOCKED', 'msg': 'Known malware signature matched'}
+)
     #Vær ops på, at når data udtrækkes, da kommer foreign key lige efter primary key i submenu
-    tabel = fetch_all_from_table(connection, "submenu")
+    tabel = fetch_all_from_table(connection, "logdata")
     print(tabel)
