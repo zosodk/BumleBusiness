@@ -1,61 +1,31 @@
-# BumleBusiness
-Obligatorisk opgave tværfagligt mellem programmering og projektledelse
+<h1>THIS IS A TITLE</h1>
+
+**THIS IS BOLD**
+
+# this is also a title h1
+## this is h2
+### this is h3
+#### this is h4 any more #'s than this will not do anything
+
+_this is italic_
+
+_**this is bold and italic**_
+
+* this is a bullet point
+  * this is an indented bullet point
+
+1. numbered list
+2. numbered list too
 
 
-# Funktionsliste:
-***alle funktioner skal have try and except***
-***alle funktioner skal have docstrings***
-
-***rå filer***
-
-    indlæs logfil
-    
-    segmentere logfilen
-    
-    fra logfil til liste med tupler
-
-    LogfilDatatiltabeller(
-
-***database***
-
-    create databse
-    
-    forbind database
-    
-    fra tupler til sql
-    
-    select * from sql
-    
-    select where filter from sql
-    
-    Insert menuitem in hovedmenu(nr, navn, beskrivelse)
-    Insert menuitem in submaenu(nr, navn, beskrivelse)
+[THIS IS A SECRET LINK DO NOT CLICK IT](https://www.youtube.com/watch?v=dQw4w9WgXcQ)
 
 
-***GUI***
+![Alt text](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAJJGLVH1ZKSqzsxcNlU4mE5D0qOFsb2SHZjXQJBLAAVjvYU3JRNY1XgwZ&s=10)
 
-    vis hovedmenu
-    GotoMenu(nr)
-    
-    hent undermenu(som indeholder bruger input)
-    
-    håndbremsefunktion - q for quit, b for back
-    CreateDefaultMenuItems (if not exist)
+#### block quotes example
+> This is an example text so i can remind myself
 
-***LIR***
+@kenwi12tp <-- this is how you refer to a username
 
-    tabel visning i terminal
-    
-    scatter plot (analyser sammenhæng)
-    
-    pie chart
-    
-    søjlediagram
-
-***Lækre features***
-    
-    den kan læse vilkårlig logfiler med andre 
-    seperatore end den givede logfil
-    
-    hovedmenu og undermenu hvorfra 
-    brugeren kan navigere
+[emoji cheat sheet](https://www.webfx.com/tools/emoji-cheat-sheet/)
