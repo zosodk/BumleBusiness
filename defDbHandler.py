@@ -35,9 +35,9 @@ def create_main_tables(conn, tablename):
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS submenu (
                 nr INTEGER PRIMARY KEY,
-                parentnr INTEGER,
                 menuitem TEXT,
                 description TEXT,
+                parentnr INTEGER,
                 FOREIGN KEY (parentnr) REFERENCES mainmenu(nr)
             )
         """)
@@ -54,8 +54,8 @@ def insert_menu_item(conn, tablename, nr, menuitem, description, parentnr=1):
         query = "INSERT OR REPLACE INTO mainmenu (nr, menuitem, description) VALUES (?, ?, ?)"
         cursor.execute(query, (nr, menuitem, description))
     elif tablename == "submenu":
-        query = "INSERT OR REPLACE INTO submenu (nr, parentnr, menuitem, description) VALUES (?, ?, ?, ?)"
-        cursor.execute(query, (nr, parentnr, menuitem, description))
+        query = "INSERT OR REPLACE INTO submenu (nr, menuitem, description, parentnr) VALUES (?, ?, ?, ?)"
+        cursor.execute(query, (nr, menuitem, description, parentnr))
     #
     conn.commit()
     #print(f"Succes! {name} er tilføjet.")

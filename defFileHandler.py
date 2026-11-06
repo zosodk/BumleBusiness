@@ -25,3 +25,5 @@ def openLogfile(filename):
 
 if __name__ == '__main__':
     openLogfile("cyber_security_log_sample.txt")
+    mydict = {"yessir":"Mother"}
+    print(mydict)
