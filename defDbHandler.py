@@ -11,7 +11,7 @@ def connect_to_db(db_name="bumlebusiness.db"):
         conn = sqlite3.connect(db_name)
         return conn
     except Error as e:
-        print(f"Fejl ved forbindelse til databasen: {e}")
+        #print(f"Fejl ved forbindelse til databasen: {e}")
         return None
 
 def create_main_tables(conn, tablename):
@@ -88,7 +88,7 @@ def insert_logdata(conn,tablename,  logdata):
     try:
         cursor = conn.cursor()
         if tablename == "logdata":
-            tabel_cleaner(conn, tablename)
+            #tabel_cleaner(conn, tablename) //Fjernet denne, da den konsekvent sletter alt data i tabellen hver gang den indsætter en linie....
             query = "INSERT OR REPLACE INTO logdata (timestamp, level, event, user, src_ip, dest_host, dest_port, status, msg) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
             cursor.execute(query,(logdata["timestamp"],logdata["level"],logdata["event"],logdata["user"],logdata["src_ip"],logdata["dest_host"],logdata["dest_port"],logdata["status"],logdata["msg"]))
         conn.commit()
@@ -107,6 +107,8 @@ def tabel_cleaner(conn, tablename):
     try:
         cursor = conn.cursor()
         cursor.execute(f"Delete FROM {tablename}")
+        # 2. Nulstil tælleren (starter fra 1 ved næste INSERT)
+        cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{tablename}';")
         return True
     except Error as e:
         print(f"fejl under rensing af table: {e}")
