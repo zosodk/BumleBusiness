@@ -144,16 +144,6 @@ def generate_mainmenu_elements(connection):
 
 if __name__ == "__main__":
     #Test af funktionalitet
-    connection = connect_to_db()
-    create_main_tables(connection, "mainmenu")
-    create_main_tables(connection, "submenu")
-    insert_menu_item(connection, "mainmenu", 1, "1 - INDLÆSNING AF LOGFIL", "Dette område giver dig mulighed for at indlæse en logfil.")
-    insert_menu_item(connection, "submenu", 1, "1 - Indlæs den rå logfil ", "Indlæser den oprindelige logfil fra disken", 1)
-    insert_menu_item(connection, "submenu", 2, "2 - Overfør logdata til database", "Genererer database elementer fra logfil", 1)
 
-    create_main_tables(connection, "logdata")
-    insert_logdata(connection, "logdata", {'timestamp': '2026-03-02T08:06:21', 'level': 'ALERT', 'event': 'MALWARE_SIGNATURE_MATCH', 'user': 'svc_backup', 'src_ip': '198.51.100.200', 'dest_host': 'mail01', 'dest_port': '445', 'status': 'BLOCKED', 'msg': 'Known malware signature matched'}
-)
-    #Vær ops på, at når data udtrækkes, da kommer foreign key lige efter primary key i submenu
     tabel = fetch_all_from_table(connection, "logdata")
     print(tabel)
