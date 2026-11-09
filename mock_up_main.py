@@ -8,7 +8,7 @@ from rich.prompt import Prompt
 from rich import box
 
 #console = Console()
-console = Console(force_terminal=True, color_system="truecolor")
+console = Console(force_terminal=True, color_system="truecolor", width=180)
 # ==========================================
 # DUMMY DATA (Kun til mock-up fremvisning)
 # ==========================================
@@ -50,7 +50,7 @@ def draw_dos_box(title: str, subtitle: str, menu_items: list[tuple[str, str]], b
 
 def show_mock_table(filter_level: str | None = None):
     """Viser en mock-up tabel med farvekodede rækker."""
-    table = Table(title="MOCK-UP: VPN Server Logs", box=box.DOUBLE_EDGE, header_style="bold cyan")
+    table = Table(title="MOCK-UP: VPN Server Logs", box=box.DOUBLE_EDGE, header_style="bold cyan", width=180)
     table.add_column("ID", style="dim", justify="right")
     table.add_column("Tid")
     table.add_column("Level")
