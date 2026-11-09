@@ -94,7 +94,7 @@ def insert_logdata(conn,tablename,  logdata):
         conn.commit()
         return True
     except Error as e:
-        print(f"fejl ved inerting af logdata: {e}")
+        print(f"fejl ved inserting af logdata: {e}")
         return False
 
 def tabel_cleaner(conn, tablename):

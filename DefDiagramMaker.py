@@ -110,27 +110,27 @@ def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter, xlabel, 
         print(f"Scatterplot failed: {e}")
         return False
 
-def piechart(conn,tabelname, xdata, ydata, parameter, titel):
-    xakse = []
-    yakse = []
+def piechart(conn,tabelname, coulum, titel):
+    labels = []
+    count = []
     cursor = conn.cursor()
 
     # læser et table og finder hvor mange gange en bestemt ting sker
     cursor.execute(f"""
-                SELECT {xdata}, COUNT(*)
+                SELECT {coulum}, COUNT(*)
                 FROM {tabelname}
-                WHERE {ydata} = ?
-                GROUP BY {xdata}
-            """, (parameter,))
+                GROUP BY {coulum}
+            """,)
     data = cursor.fetchall()
     # print(data)
     for tuple in data:
-        xakse.append(tuple[0])
-        yakse.append(tuple[1])
+        labels.append(tuple[0])
+        count.append(tuple[1])
 
     plt.pie(count, labels=labels, autopct='%1.1f%%')
-    plt.title("zoo animals")
+    plt.title(titel)
     plt.show()
 if __name__ == "__main__":
     connection = connect_to_db()
-    scatterplotMedTendensLinje(connection, "logdata", "user","level", "ALERT", "users", "amount of alerts", "alerts per user")
+    #scatterplotMedTendensLinje(connection, "logdata", "user","level", "ALERT", "users", "amount of alerts", "alerts per user")
+    piechart(connection, "logdata", "level", "logdata")
