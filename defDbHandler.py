@@ -30,14 +30,17 @@ def create_main_tables(conn, tablename):
                 description TEXT
             )
         """)
+        conn.commit()
 
     elif tablename == "submenu":
+        #Ændret SQL til at have en sammensat primærnøgle - når GUI menu generator laves, da er dette nemmer
         cursor.execute("""
             CREATE TABLE IF NOT EXISTS submenu (
-                nr INTEGER PRIMARY KEY,
+                nr INTEGER,
                 menuitem TEXT,
                 description TEXT,
                 parentnr INTEGER,
+                PRIMARY KEY (parentnr, nr),
                 FOREIGN KEY (parentnr) REFERENCES mainmenu(nr)
             )
         """)
@@ -58,11 +61,12 @@ def create_main_tables(conn, tablename):
                 msg LONGTEXT
             )
         """)
+        conn.commit()
     return cursor
 
 def insert_menu_item(conn, tablename, nr, menuitem, description, parentnr=1):
     """
-    Indsætter en ny elementer i tabel.
+    Indsætter et nyt menupunkt i tabel. - kan bruges til både hoved og undermenu, da hovedmenu ikke bruger parentnr til noget - så denne ignoreres
     """
     cursor = conn.cursor()
     if tablename == "mainmenu":
@@ -109,6 +113,7 @@ def tabel_cleaner(conn, tablename):
         cursor.execute(f"Delete FROM {tablename}")
         # 2. Nulstil tælleren (starter fra 1 ved næste INSERT)
         cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{tablename}';")
+        conn.commit()
         return True
     except Error as e:
         print(f"fejl under rensing af table: {e}")
@@ -123,36 +128,19 @@ def fetch_all_from_table(conn, tablename):
     cursor.execute(f"SELECT * FROM {tablename}")
     return cursor.fetchall()
 
-def generate_mainmenu_elements(connection):
-    """
-    Genererer database indgange for at vi kan skabe en grafiskbrugerflade senere hen
-    :param connection: Connection til databasen
-    """
-    #Mainmenu skal altid laves først, da submenu er afhængig af mainmenu
-    create_main_tables(connection, "mainmenu")
-    create_main_tables(connection, "submenu")
-
-    #Mainmenu items - nr bliver ikke talt op automatisk - skal angives. Hvis ikke dette bliver gjort, da vil den blive overskrevet:
-    insert_menu_item(connection, "mainmenu", 1, "1 - INDLÆSNING AF LOGFIL", "Dette område giver dig mulighed for at indlæse en logfil.")
-
-    #Submenu items:
-    #Husk at tælle nr op - samt at referere til den korrekte hovedmenu - parentnr
-    #Hvis den eksisterer i forvejen, da overskrives den blot (INSERT INTO OR REPLACE)
-    insert_menu_item(connection, "submenu", 1, "1 - Indlæs den rå logfil ", "Indlæser den oprindelige logfil fra disken", 1)
-    insert_menu_item(connection, "submenu", 2, "2 - Overfør logdata til database", "Genererer database elementer fra logfil", 1)
 
 
 if __name__ == "__main__":
     #Test af funktionalitet
-    connection = connect_to_db()
-    create_main_tables(connection, "mainmenu")
-    create_main_tables(connection, "submenu")
-    insert_menu_item(connection, "mainmenu", 1, "1 - INDLÆSNING AF LOGFIL", "Dette område giver dig mulighed for at indlæse en logfil.")
-    insert_menu_item(connection, "submenu", 1, "1 - Indlæs den rå logfil ", "Indlæser den oprindelige logfil fra disken", 1)
-    insert_menu_item(connection, "submenu", 2, "2 - Overfør logdata til database", "Genererer database elementer fra logfil", 1)
+    #connection = connect_to_db()
+    #create_main_tables(connection, "mainmenu")
+    #create_main_tables(connection, "submenu")
+    #insert_menu_item(connection, "mainmenu", 1, "1 - INDLÆSNING AF LOGFIL", "Dette område giver dig mulighed for at indlæse en logfil.")
+    #insert_menu_item(connection, "submenu", 1, "1 - Indlæs den rå logfil ", "Indlæser den oprindelige logfil fra disken", 1)
+    #insert_menu_item(connection, "submenu", 2, "2 - Overfør logdata til database", "Genererer database elementer fra logfil", 1)
 
-    create_main_tables(connection, "logdata")
-    insert_logdata(connection, "logdata", {'timestamp': '2026-03-02T08:06:21', 'level': 'ALERT', 'event': 'MALWARE_SIGNATURE_MATCH', 'user': 'svc_backup', 'src_ip': '198.51.100.200', 'dest_host': 'mail01', 'dest_port': '445', 'status': 'BLOCKED', 'msg': 'Known malware signature matched'}
+   # create_main_tables(connection, "logdata")
+    #insert_logdata(connection, "logdata", {'timestamp': '2026-03-02T08:06:21', 'level': 'ALERT', 'event': 'MALWARE_SIGNATURE_MATCH', 'user': 'svc_backup', 'src_ip': '198.51.100.200', 'dest_host': 'mail01', 'dest_port': '445', 'status': 'BLOCKED', 'msg': 'Known malware signature matched'}
 )
     #Vær ops på, at når data udtrækkes, da kommer foreign key lige efter primary key i submenu
     tabel = fetch_all_from_table(connection, "logdata")
