@@ -132,7 +132,7 @@ def fetch_all_from_table(conn, tablename):
 
 if __name__ == "__main__":
     #Test af funktionalitet
-    #connection = connect_to_db()
+    connection = connect_to_db()
     #create_main_tables(connection, "mainmenu")
     #create_main_tables(connection, "submenu")
     #insert_menu_item(connection, "mainmenu", 1, "1 - INDLÆSNING AF LOGFIL", "Dette område giver dig mulighed for at indlæse en logfil.")
