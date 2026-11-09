@@ -1,12 +1,14 @@
 import os
+# Sætter TERM til xterm-256color, hvis den ikke allerede eksisterer
+os.environ.setdefault("TERM", "xterm-256color")
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.prompt import Prompt
 from rich import box
 
-console = Console()
-
+#console = Console()
+console = Console(force_terminal=True, color_system="truecolor")
 # ==========================================
 # DUMMY DATA (Kun til mock-up fremvisning)
 # ==========================================
@@ -36,12 +38,12 @@ def draw_dos_box(title: str, subtitle: str, menu_items: list[tuple[str, str]], b
 
     panel = Panel(
         menu_table,
-        title=f"[bold white on blue] {title} [/]",
+        title=f"[bold black on white] {title} [/]",
         subtitle=f"[dim]{subtitle}[/]",
         box=box.DOUBLE,
         border_style=border_color,
         padding=(1, 4),
-        expand=False
+        expand=True
     )
     console.print(panel)
 
