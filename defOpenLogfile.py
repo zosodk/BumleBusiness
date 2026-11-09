@@ -3,27 +3,35 @@ def parse_logfile_data(path):
     # åben filen
     logfile = open_logfile(path)
 
+    # lad os formatere logfilen så vi har at gøre med en liste af strings
+    logfile_as_list = logfile.split("\n")
+
     # filens indhold skal tjekkes for mangler
-    timestamp = has_timestamp(logfile)
+    timestamp = has_timestamps(logfile_as_list)
 
     # vi vil tjekke om filen indeholder et timestamp og om filen indeholder de oplysninger som vi forventer
     expected_content = has_expected_content(logfile)
 
     return timestamp and expected_content
 
-def has_timestamp(logfile):
+def has_timestamps(logfile):
     from datetime import datetime
+    count = 0
 
-    line = '2026-03-01T08:01:17 level=INFO event=LOGIN_SUCCESS user=eve src_ip=10.0.0.5 dest_host=db01 dest_port=53 status=OK msg="User authenticated successfully"'
+    while count < len(logfile):
+        for line in logfile:
+            try:
+                datetime.fromisoformat(line[:19])
+            except:
+                print('No timestamp found!')
+                break
+            else:
+                count += 1
 
-    try:
-        datetime.fromisoformat(line[:19])
-    except ValueError:
-        print('Not a timestamp')
+    if count == len(logfile):
+        return True
     else:
-        print('Found a timestamp')
-
-    return True
+        return False
 
 def has_expected_content(logfile):
     return True
