@@ -1,3 +1,12 @@
+def parse_logfile_data(path):
+
+    # åben filen
+    logfile = open_logfile(path)
+
+    # filens indhold skal tjekkes for mangler
+    # vi vil tjekke om filen indeholder et timestamp og om filen indeholder de oplysninger som vi forventer
+    return logfile
+
 def open_logfile(path):
     try:
         # hvis koden her nedenfor kører, så kan filen læses
@@ -26,5 +35,5 @@ def open_logfile(path):
         return "An unknown error occurred."
 
 
-file = open_logfile("cyber_security_log_sample.txt")
+file = parse_logfile_data("cyber_security_log_sample.txt")
 print(file)
