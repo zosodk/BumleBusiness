@@ -5,7 +5,17 @@ def parse_logfile_data(path):
 
     # filens indhold skal tjekkes for mangler
     # vi vil tjekke om filen indeholder et timestamp og om filen indeholder de oplysninger som vi forventer
-    return logfile
+    timestamp = has_timestamp(logfile)
+
+    expected_content = has_expected_content(logfile)
+
+    return timestamp and expected_content
+
+def has_timestamp(logfile):
+    return True
+
+def has_expected_content(logfile):
+    return True
 
 def open_logfile(path):
     try:
