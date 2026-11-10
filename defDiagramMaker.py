@@ -110,25 +110,58 @@ def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter, xlabel, 
         return False
 
 def piechart(conn,tabelname, coulum, titel):
-    labels = []
-    count = []
-    cursor = conn.cursor()
+    try:
+        labels = []
+        count = []
+        cursor = conn.cursor()
 
-    # læser et table og finder hvor mange gange en bestemt ting sker
-    cursor.execute(f"""
-                SELECT {coulum}, COUNT(*)
-                FROM {tabelname}
-                GROUP BY {coulum}
-            """,)
-    data = cursor.fetchall()
-    # print(data)
-    for tuple in data:
-        labels.append(tuple[0])
-        count.append(tuple[1])
+        # læser et table og finder hvor mange gange en bestemt ting sker
+        cursor.execute(f"""
+                    SELECT {coulum}, COUNT(*)
+                    FROM {tabelname}
+                    GROUP BY {coulum}
+                """,)
+        data = cursor.fetchall()
+        # print(data)
+        for tuple in data:
+            labels.append(tuple[0])
+            count.append(tuple[1])
 
-    plt.pie(count, labels=labels, autopct='%1.1f%%')
-    plt.title(titel)
-    plt.show()
+        plt.pie(count, labels=labels, autopct='%1.1f%%')
+        plt.title(titel)
+        plt.show()
+        return True
+    except Error as e:
+        print(f"Scatterplot failed: {e}")
+        return False
+
+def piechartspecefic(conn,tabelname, coulum, titel, coulum2,parameter):
+    try:
+        labels = []
+        count = []
+        cursor = conn.cursor()
+
+        # læser et table og finder hvor mange gange en bestemt ting sker
+        cursor.execute(f"""
+                    SELECT {coulum}, COUNT(*)
+                    FROM {tabelname}
+                    WHERE {coulum2} = ?
+                    GROUP BY {coulum}
+                """,(parameter,))
+        data = cursor.fetchall()
+        # print(data)
+        for tuple in data:
+            labels.append(tuple[0])
+            count.append(tuple[1])
+
+        plt.pie(count, labels=labels, autopct='%1.1f%%')
+        plt.title(titel)
+        plt.show()
+        return True
+    except Error as e:
+        print(f"Scatterplot failed: {e}")
+        return False
+
 def timestamperlevel(conn,time):
     cursor = conn.cursor()
     cursor.execute(f"""
@@ -147,7 +180,7 @@ def timestamperlevel(conn,time):
         END) AS peak_severity
     FROM 
         logdata
-    WHERE event = 'PORT_SCAN_DETECTED' OR 'MALWARE_SIGNATURE_MATCH'
+    WHERE event = 'PASSWORD_RESET'
     GROUP BY 
         interval_start
     ORDER BY 
@@ -164,13 +197,13 @@ def timestamperevent(conn,time):
         COUNT(*) AS total_events,
         SUM(CASE WHEN event = 'LOGIN_FAILED' THEN 1 ELSE 0 END) AS count_LOGIN_FAILED,
         SUM(CASE WHEN event = 'FILE_ACCESS_DENIED' THEN 1 ELSE 0 END) AS count_FILE_ACCESS_DENIED,
-        SUM(CASE WHEN level = 'PASSWORD_RESET' THEN 1 ELSE 0 END) AS count_PASSWORD_RESET,
-        SUM(CASE WHEN level = 'PORT_SCAN_DETECTED' THEN 1 ELSE 0 END) AS count_PORT_SCAN_DETECTED,
-        SUM(CASE WHEN level = 'PRIVILEGE_ESCALATION_ATTEMPT' THEN 1 ELSE 0 END) AS count_PRIVILEGE_ESCALATION_ATTEMPT,
-        SUM(CASE WHEN level = 'USB_DEVICE_ATTACHED' THEN 1 ELSE 0 END) AS count_USB_DEVICE_ATTACHED,
-        SUM(CASE WHEN level = 'MALWARE_SIGNATURE_MATCH' THEN 1 ELSE 0 END) AS count_MALWARE_SIGNATURE_MATCH,
+        SUM(CASE WHEN event = 'PASSWORD_RESET' THEN 1 ELSE 0 END) AS count_PASSWORD_RESET,
+        SUM(CASE WHEN event = 'PORT_SCAN_DETECTED' THEN 1 ELSE 0 END) AS count_PORT_SCAN_DETECTED,
+        SUM(CASE WHEN event = 'PRIVILEGE_ESCALATION_ATTEMPT' THEN 1 ELSE 0 END) AS count_PRIVILEGE_ESCALATION_ATTEMPT,
+        SUM(CASE WHEN event = 'USB_DEVICE_ATTACHED' THEN 1 ELSE 0 END) AS count_USB_DEVICE_ATTACHED,
+        SUM(CASE WHEN event = 'MALWARE_SIGNATURE_MATCH' THEN 1 ELSE 0 END) AS count_MALWARE_SIGNATURE_MATCH,
         -- Højeste sværhedsgrad i det pågældende kvarter
-        MAX(CASE UPPER(level)
+        MAX(CASE UPPER(event)
             WHEN 'LOGIN_FAILED'  THEN 1
             WHEN 'FILE_ACCESS_DENIED'  THEN 2
             WHEN 'PASSWORD_RESET' THEN 3
@@ -273,20 +306,24 @@ def allUserEvents(conn, user, tabelname):
     cursor.execute(f"""SELECT * FROM {tabelname} WHERE user = '{user}' """)
     data = cursor.fetchall()
     return data
-
+def speceficUserEvilEvents(conn, user, tabelname):
+    cursor = conn.cursor()
+    cursor.execute(f"""SELECT * FROM {tabelname} WHERE user = '{user}' AND (event = 'PRIVILEGE_ESCALATION_ATTEMPT' OR event = 'PASSWORD_RESET' OR event = 'MALWARE_SIGNATURE_MATCH' OR event = 'USB_DEVICE_ATTACHED')""")
+    data = cursor.fetchall()
+    return data
 
 if __name__ == "__main__":
     connection = connect_to_db()
 
     #print ønsked bruger
     #bruger = input(f"indtast ønsked brugers navn")
-    #historik = allUserEvents(connection, bruger, 'logdata')
+    #historik = speceficUserEvilEvents(connection, bruger, 'logdata')
     #for item in historik:
     #    print(item)
     #scatterplot(connection, "logdata", 'timestamp', 'user', 'walter', "time", "events","logdata" )
 
     #malware per user detected
-    #scatterplot(connection, "logdata", "user","event", "MALWARE_SIGNATURE_MATCH", "users", "amount of malware per user detected", "logdata")
+    scatterplot(connection, "logdata", "event","src_ip", "198.51.100.23", "users", "amount of malware per user detected", "logdata")
     #barchart(connection, "logdata", "user", "event", "MALWARE_SIGNATURE_MATCH", "users",
                 #"amount of malware per user detected", "logdata")
 
@@ -297,7 +334,7 @@ if __name__ == "__main__":
                 #"walters events", "logdata")
 
     #scatterplotMedTendensLinje(connection, "logdata", "user", "level","ALERT" , "Ipadresses", "walters logins", "logdata")
-    piechart(connection, "logdata", "event", "logdata")
+    #piechartspecefic(connection, "logdata", "event", "walters events", "src_ip", "198.51.100.23")
     #timestamper(connection)
-    scatterplotTime(connection,"titel", "xlabel", "ylabel")
+    scatterplotTime(connection, "titel", "xlabel", "ylabel")
 

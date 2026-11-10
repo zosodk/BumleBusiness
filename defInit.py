@@ -35,9 +35,10 @@ def init_db():
         # Undermenuer til Hovedmenu 3 (parentnr = 3)
 
         # Undermenuer til Hovedmenu 4 (parentnr = 4)
-        insert_menu_item(conn, "submenu", 1, "Vis piecharts","Indsæt data til dannelse af piechart", 4)
-        insert_menu_item(conn, "submenu", 2, "Vis scatterplots","Indsæt data til dannelse af scatterplots", 4)
-        insert_menu_item(conn, "submenu", 3, "Vis søjlediagrammer", "Indsæt data til dannelse af søjediagrammer", 4)
+        insert_menu_item(conn, "submenu", 1, "Vis coulum piechart","Piechart over en kolonne af data", 4)
+        insert_menu_item(conn, "submenu", 2, "Vis specefic piechart", "Funktionen opretter et piechart, der viser fordelingen af hændelser i en valgt kolonne baseret på et bestemt søgekriterie.", 4)
+        insert_menu_item(conn, "submenu", 3, "Vis scatterplots","Indsæt data til dannelse af scatterplots", 4)
+        insert_menu_item(conn, "submenu", 4, "Vis søjlediagrammer", "Indsæt data til dannelse af søjediagrammer", 4)
         insert_menu_item(conn, "submenu", 0, "Tilbage til hovedmenu", "Returnerer til hovedmenuen", 4)
 
         conn.commit()

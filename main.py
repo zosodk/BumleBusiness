@@ -65,14 +65,23 @@ def handle_submenu_4_actions(conn, choice: str):
     :param choice: choice
     """
     if choice == "1":
-        console.print("\n[bold cyan]Der skal vælges data til indsættelse i piechartet[/]\n")
-        data = input("hvilken data skal der laves piechart på")
+        console.print("\n[bold cyan]dannelse af piechart[/]\n")
+        tablename = input("hvilket table vil du have data fra ")
+        data = input("hvilken kolonne skal der laves piechart på ")
+        if piechart(conn, tablename, data, data):
+            console.print("\n[bold cyan]piechart er lavet i plots[/]\n")
+
 
 
     elif choice == "2":
-        if tabel_cleaner(conn, "logdata"):
-            conn.commit()
-            console.print("\n[bold green]✔ Alt eksisterende logindhold i databasen er nu slettet![/]")
+        console.print("\n[bold cyan]dannelse af specefic piechart[/]\n")
+        tablename = input("hvilket table vil du have data fra ")
+        data = input("indtast den primære kolonne ")
+        data2 = input("indtast kolonne dit søgekriterie kan findes i ")
+        searchKriteria = input("indtast dit søgekriterie ")
+        if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
+            print("piechart lavet i plots")
+
 
     elif choice == "3":
         count = 0
@@ -115,7 +124,7 @@ def run_dynamic_submenu(conn, parent_nr: int, parent_title: str):
         )
 
         valid_keys = [item[0] for item in submenu_items]
-        #default choice i submenu sættes til at gå til bage til hovedmenu
+        #default choice i submenu sættes til at gå tilbage til hovedmenu
         choice = ask_menu_choice("Vælg funktion", valid_keys, default_choice="0")
 
         if choice == "0":
