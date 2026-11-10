@@ -25,9 +25,10 @@ def init_db():
         insert_menu_item(conn, "mainmenu", 0, "Afslut program", "Stopper programmet")
 
         # Undermenuer til Hovedmenu 1 (parentnr = 1)
-        insert_menu_item(conn, "submenu", 1, "Indlæs log fil (cyber_security_log_sample.txt)","Indlæser logfilen fra disken", 1)
-        insert_menu_item(conn, "submenu", 2, "Bearbejdelse af logfil", "Render logfil igennem og indsætter data i databasen", 1)
-        insert_menu_item(conn, "submenu", 3, "Slet eksisterende log indhold fra databasen","Sletter alt logindhold i databasen", 1)
+        insert_menu_item(conn, "submenu", 1, "Vis log fil (cyber_security_log_sample.txt)","Viser den rå logfilen fra disken - gemmer ikke noget", 1)
+        insert_menu_item(conn, "submenu", 2, "Indlæser logfil til tabel i databasen", "Undersøger logfil og indsætter data i databasen", 1)
+        insert_menu_item(conn, "submenu", 3, "Vis log tabel fra databasen", "Viser alt log data i databasen", 1)
+        insert_menu_item(conn, "submenu", 4, "Slet eksisterende log indhold fra databasen","Sletter alt logindhold i databasen", 1)
         insert_menu_item(conn, "submenu", 0, "Tilbage til hovedmenu", "Returnerer til hovedmenuen", 1)
 
         # Undermenuer til Hovedmenu 2 (parentnr = 2)
