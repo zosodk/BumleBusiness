@@ -19,8 +19,8 @@ def init_db():
 
         # Hovedmenu (nr 1-4 samt 0 til afslut)
         insert_menu_item(conn, "mainmenu", 1, "Bearbejdelse af logfil","Giver mulighed for at indlæse logfil, slette eksisterende log indhold og bearbejde logfil")
-        insert_menu_item(conn, "mainmenu", 2, "Bearbejde log indhold i databasen","Giver mulighed for at bearbejde log indhold i databasen")
-        insert_menu_item(conn, "mainmenu", 3, "Søgning i log data", "Giver mulighed for at søge i log data")
+        insert_menu_item(conn, "mainmenu", 2, "Søgning i log indhold i databasen","Søg efter bruger, ip o.l. i databasen")
+        insert_menu_item(conn, "mainmenu", 3, "Udvidet søgning", "Avancerede søgning med flere parametre")
         insert_menu_item(conn, "mainmenu", 4, "Visualisering af log data", "Giver mulighed for at visualisere log data")
         insert_menu_item(conn, "mainmenu", 0, "Afslut program", "Stopper programmet")
 
