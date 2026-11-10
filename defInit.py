@@ -30,11 +30,16 @@ def init_db():
         insert_menu_item(conn, "submenu", 3, "Bearbejdelse af logfil", "Render logfil igennem og indsætter data i databasen", 1)
         insert_menu_item(conn, "submenu", 0, "Tilbage til hovedmenu", "Returnerer til hovedmenuen", 1)
 
-        # Undermenuer til Hovedmenu 1 (parentnr = 2)
+        # Undermenuer til Hovedmenu 2 (parentnr = 2)
 
-        # Undermenuer til Hovedmenu 1 (parentnr = 3)
+        # Undermenuer til Hovedmenu 3 (parentnr = 3)
 
-        # Undermenuer til Hovedmenu 1 (parentnr = 4)
+        # Undermenuer til Hovedmenu 4 (parentnr = 4)
+        insert_menu_item(conn, "submenu", 1, "Vis piecharts","Indsæt data til dannelse af piechart", 4)
+        insert_menu_item(conn, "submenu", 2, "Vis scatterplots","Indsæt data til dannelse af scatterplots", 4)
+        insert_menu_item(conn, "submenu", 3, "Vis søjlediagrammer", "Indsæt data til dannelse af søjediagrammer", 4)
+        insert_menu_item(conn, "submenu", 0, "Tilbage til hovedmenu", "Returnerer til hovedmenuen", 4)
+
         conn.commit()
         break
 

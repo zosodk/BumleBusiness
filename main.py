@@ -2,6 +2,7 @@ from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, ins
 from defFileHandler import openLogfile, parse_logline
 from defInit import init_db
 from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table
+from defDiagramMaker import *
 
 
 def get_menu_from_db(conn, table_name: str, parent_nr: int | None = None) -> list[tuple[str, str, str]]:
@@ -57,6 +58,32 @@ def handle_submenu_1_actions(conn, choice: str):
         conn.commit()
         console.print(f"\n[bold green]✔ {count} loglinjer er parset og indsat i SQLite-databasen![/]")
 
+def handle_submenu_4_actions(conn, choice: str):
+    """
+    Styrer hvad der sker når der tastes på skærmen/konsollen
+    :param conn: database connection
+    :param choice: choice
+    """
+    if choice == "1":
+        console.print("\n[bold cyan]Der skal vælges data til indsættelse i piechartet[/]\n")
+        data = input("hvilken data skal der laves piechart på")
+
+
+    elif choice == "2":
+        if tabel_cleaner(conn, "logdata"):
+            conn.commit()
+            console.print("\n[bold green]✔ Alt eksisterende logindhold i databasen er nu slettet![/]")
+
+    elif choice == "3":
+        count = 0
+        with open("cyber_security_log_sample.txt", "r", encoding="utf-8") as fil:
+            for linie in fil:
+                if linie.strip():
+                    parsed = parse_logline(linie)
+                    insert_logdata(conn, "logdata", parsed)
+                    count += 1
+        conn.commit()
+        console.print(f"\n[bold green]✔ {count} loglinjer er parset og indsat i SQLite-databasen![/]")
 
 def run_dynamic_submenu(conn, parent_nr: int, parent_title: str):
     """
@@ -96,6 +123,8 @@ def run_dynamic_submenu(conn, parent_nr: int, parent_title: str):
 
         if parent_nr == 1:
             handle_submenu_1_actions(conn, choice)
+        elif parent_nr == 4:
+            handle_submenu_4_actions(conn, choice)
         else:
             console.print(f"\n[bold magenta]✔ Valgte punkt [{choice}] under {parent_title}[/]")
 
