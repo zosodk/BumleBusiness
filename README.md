@@ -12,11 +12,8 @@ Målet er at gøre det nemt for virksomheden at finde mistænkelelige hændelser
 
 I forbindelse med projektet arbejder vi med SCRUM som projektstyringsmetode for at strukturere vores arbejde og holde styr på projektets forskellige opgaver. <br>
 Vi har gjort brug af [Jira](URL) som vores Task Board til at organisere projektets opgaver og holde styr på deres status.
-
 ***
-
-## [2. SCRUM](https://jira.com)
-####
+## 2. SCRUM
 ### Introduktion
 SCRUM er en agil projektstyringsmetode vi har brugt til at strukturere arbejdet i vores projekt. <br>
 Metoden hjælper med at opdele arbejdet i mindre opgaver og skabe overblik over projektets udvikling.
