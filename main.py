@@ -4,6 +4,14 @@ from defInit import init_db
 from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table
 
 
+def sorterings_vaerdi(item):
+    foerste_element = item[0]
+
+    if foerste_element == "0":
+        return 999  # Send "0" om bag i køen
+    else:
+        return int(foerste_element)  # Lav om til tal for normal sortering
+
 def get_menu_from_db(conn, table_name: str, parent_nr: int | None = None) -> list[tuple[str, str, str]]:
     """
     Henter menupunkter fra tabellen og bruger 'nr' direkte som nøgle.
@@ -26,7 +34,8 @@ def get_menu_from_db(conn, table_name: str, parent_nr: int | None = None) -> lis
                 menu_items.append((str(nr), menuitem, desc or ""))
 
     # Sorter så nr=0 (Tilbage/Afslut) altid ligger nederst
-    menu_items.sort(key=lambda item: 999 if item[0] == "0" else int(item[0]))
+    # Nu sorterer vi listen ved at kalde vores nye funktion
+    menu_items.sort(key=sorterings_vaerdi)
     return menu_items
 
 
@@ -116,7 +125,7 @@ def main_menu():
 
         draw_dos_box(
             title="BUMLE BUSINESS - LOG ANALYSE v1.0",
-            subtitle="Hovedmenu (Hentet fra SQLite - test)",
+            subtitle="Hovedmenu",
             menu_items=main_items,
             border_color="bright_cyan"
         )
@@ -129,7 +138,16 @@ def main_menu():
             conn.close()
             break
 
-        selected_title = next((title for key, title, _ in main_items if key == choice), f"Menu {choice}")
+        selected_title = f"Menu {choice}"
+
+        # Vi løber igennem hvert punkt i listen
+        for item in main_items:
+            key = item[0]  # Første element (f.eks. "1")
+            title = item[1]  # Andet element (f.eks. "Logoperationer")
+            # Hvis nøglen matcher brugerens valg, gemmer vi titlen og stopper
+            if key == choice:
+                selected_title = title
+                break  # 'break' stopper løkken med det samme, da vi har fundet det, vi søgte
         run_dynamic_submenu(conn, int(choice), selected_title)
 
 
