@@ -52,11 +52,6 @@ def handle_submenu_1_actions(conn, choice: str):
         console.print("\n[bold green]✔ Rå logfil udlæst til skærmen![/]")
 
     elif choice == "2":
-        if tabel_cleaner(conn, "logdata"):
-            conn.commit()
-            console.print("\n[bold green]✔ Alt eksisterende logindhold i databasen er nu slettet![/]")
-
-    elif choice == "3":
         count = 0
         with open("cyber_security_log_sample.txt", "r", encoding="utf-8") as fil:
             for linie in fil:
@@ -66,6 +61,11 @@ def handle_submenu_1_actions(conn, choice: str):
                     count += 1
         conn.commit()
         console.print(f"\n[bold green]✔ {count} loglinjer er parset og indsat i SQLite-databasen![/]")
+
+    elif choice == "3":
+        if tabel_cleaner(conn, "logdata"):
+            conn.commit()
+            console.print("\n[bold green]✔ Alt eksisterende logindhold i databasen er nu slettet![/]")
 
 def handle_submenu_4_actions(conn, choice: str):
     """

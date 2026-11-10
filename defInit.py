@@ -26,14 +26,24 @@ def init_db():
 
         # Undermenuer til Hovedmenu 1 (parentnr = 1)
         insert_menu_item(conn, "submenu", 1, "Indlæs log fil (cyber_security_log_sample.txt)","Indlæser logfilen fra disken", 1)
-        insert_menu_item(conn, "submenu", 2, "Slet eksisterende log indhold fra databasen","Sletter alt logindhold i databasen", 1)
-        insert_menu_item(conn, "submenu", 3, "Bearbejdelse af logfil", "Render logfil igennem og indsætter data i databasen", 1)
+        insert_menu_item(conn, "submenu", 2, "Bearbejdelse af logfil", "Render logfil igennem og indsætter data i databasen", 1)
+        insert_menu_item(conn, "submenu", 3, "Slet eksisterende log indhold fra databasen","Sletter alt logindhold i databasen", 1)
         insert_menu_item(conn, "submenu", 0, "Tilbage til hovedmenu", "Returnerer til hovedmenuen", 1)
 
         # Undermenuer til Hovedmenu 2 (parentnr = 2)
-
+        insert_menu_item(conn, "submenu", 1, "Vis historik for en ip-adresse du angiver", "Viser tabel over ip's historik", 2)
+        insert_menu_item(conn, "submenu", 2, "Vis historik for et brugernavn du angiver", "Viser tabel over brugers's historik", 2)
+        insert_menu_item(conn, "submenu", 3, "Vis historik for en event type", "Viser event historik", 2)
+        insert_menu_item(conn, "submenu", 4, "Vis historik for en level type", "Viser level (INFO, WARN, ALERT) historik", 2)
+        insert_menu_item(conn, "submenu", 5, "Vis historik for status meddelelse", "Viser status besked historik (OK, FAILED, DENIED etc)", 2)
+        insert_menu_item(conn, "submenu", 0, "Tilbage til hovedmenu", "Returnerer til hovedmenuen", 2)
         # Undermenuer til Hovedmenu 3 (parentnr = 3)
-
+        insert_menu_item(conn, "submenu", 1, "Vis historik for en ip-adresse og event", "Viser tabel over historik", 3)
+        insert_menu_item(conn, "submenu", 2, "Vis historik for et ip-adresse og level", "Viser tabel over historik", 3)
+        insert_menu_item(conn, "submenu", 3, "Vis historik for ALERTS og Login_failed Events", "Viser historik", 3)
+        insert_menu_item(conn, "submenu", 4, "Vis historik for alle ALERTS", "Viser ALERTS historik", 3)
+        insert_menu_item(conn, "submenu", 5, "Vis historik for flere brugere fra samme IP", "Viser hvis flere brugere logger eller forsøger fra samme IP", 3)
+        insert_menu_item(conn, "submenu", 0, "Tilbage til hovedmenu", "Returnerer til hovedmenuen", 3)
         # Undermenuer til Hovedmenu 4 (parentnr = 4)
         insert_menu_item(conn, "submenu", 1, "Vis piecharts","Indsæt data til dannelse af piechart", 4)
         insert_menu_item(conn, "submenu", 2, "Vis scatterplots","Indsæt data til dannelse af scatterplots", 4)
