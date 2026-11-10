@@ -10,9 +10,12 @@ def parse_logfile_data(path):
     timestamp = has_timestamps(logfile_as_list)
 
     # vi vil tjekke om filen indeholder et timestamp og om filen indeholder de oplysninger som vi forventer
-    expected_content = has_expected_content(logfile)
+    # vi forventer følgende indhold:
+    expected_content = ["level", "user", "src_ip", "dest_host", "dest_port", "status", "msg"]
 
-    return timestamp and expected_content
+    has_content = has_expected_content(logfile_as_list, expected_content)
+
+    return timestamp and has_content
 
 def has_timestamps(logfile):
     from datetime import datetime
@@ -33,7 +36,10 @@ def has_timestamps(logfile):
     else:
         return False
 
-def has_expected_content(logfile):
+def has_expected_content(logfile, list_of_expected_content):
+    print("Logfile content:", logfile)
+    print("Expected content:", list_of_expected_content)
+
     return True
 
 def open_logfile(path):
