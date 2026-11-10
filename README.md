@@ -16,6 +16,7 @@ Vi har gjort brug af [Jira](URL) som vores Task Board til at organisere projekte
 ***
 
 ## [2. SCRUM](https://jira.com)
+####
 ### Introduktion
 SCRUM er en agil projektstyringsmetode vi har brugt til at strukturere arbejdet i vores projekt. <br>
 Metoden hjælper med at opdele arbejdet i mindre opgaver og skabe overblik over projektets udvikling.
@@ -26,7 +27,7 @@ I vores projekt har vi brugt user stories til at beskrive funktioner og mulighed
 Tasks bruges til at opdele projekts arbejde i konkrete opgaver, som gruppens medlemmer kan arbejde med. En større opgave kan opdeles i mindre underopgaver (subtasks), så arbejdet er mere overskueligt. <br>
 I BumleBusiness har vi for eksempel oprettet opgaver omkring bearbejdning af logfiler og udvikling af funktioner til visning af tabeller og diagrammer.
 ### Acceptkriterier
-vi har brugt acceptkriterier til at definere hvilke krav en funktion skal opfylde, før at vi kan se den som færdig. De hjælper med at sikre, at det udviklede system virker som forventet.
+Vi har brugt acceptkriterier til at definere hvilke krav en funktion skal opfylde, før at vi kan se den som færdig. De hjælper med at sikre, at det udviklede system virker som forventet.
 ### Task board
 Vi har gjort brug af Jira som vores task board til at organisere projektets forskellige opgaver. Her har vi oprettet og fordelt opgaver i gruppen, så vi kan holde styr på projektets udvikling.
 ***
