@@ -37,10 +37,31 @@ def has_timestamps(logfile):
         return False
 
 def has_expected_content(logfile, list_of_expected_content):
-    print("Logfile content:", logfile)
-    print("Expected content:", list_of_expected_content)
+    import shlex
+    temp_logfile = logfile.copy()
+    modified_logfile = []
 
-    return True
+    for line in temp_logfile:
+        temp_line = shlex.split(line)
+
+        save_initial_value = temp_line[0]
+        temp_line[0] = f"timestamp={save_initial_value}"
+
+        log_entry = {
+            key: value
+            for key, value in (item.split("=", 1) for item in temp_line)
+        }
+
+        modified_logfile.append(log_entry)
+
+    length_original_logfile = len(logfile)
+    counter = 0
+
+    for log_entry in modified_logfile:
+        if set(list_of_expected_content).issubset(log_entry.keys()):
+            counter +=1
+
+    return counter == length_original_logfile
 
 def open_logfile(path):
     try:
