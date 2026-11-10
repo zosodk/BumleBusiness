@@ -1,13 +1,19 @@
 import os
-os.environ.setdefault("TERM", "xterm-256color")
+import sys
 from rich.console import Console
 from rich.panel import Panel
 from rich.table import Table
 from rich.prompt import Prompt
 from rich import box
 
-console = Console(force_terminal=True, color_system="truecolor", width=180)
+if os.name == "nt":
+  import ctypes
 
+  kernel32 = ctypes.windll.kernel32
+  kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+os.environ.setdefault("TERM", "xterm-256color")
+os.environ.setdefault("COLORTERM", "truecolor")
+console = Console(force_terminal=True, color_system="truecolor", width=180)
 
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
