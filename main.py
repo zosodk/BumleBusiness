@@ -156,11 +156,11 @@ def handle_submenu_4_actions(conn, choice: str):
     elif choice == "5":
         tabelname = input("indtast hvilket table du vil have data fra ")
         coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
-        value = input("indtast hvilken data der skal laves historik fra ")
-        parameters = fetch_distinct_from_table(conn, tabelname, value)
+        parameters = fetch_distinct_from_table(conn, tabelname, coulum)
         print("\nher er et udvalg af dine parameter")
         for item in parameters:
             print(item[0])
+        value = input("indtast hvilken data der skal laves historik fra ")
         parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
         if historyCreater(conn,tabelname,coulum, value, parameter):
             print("historik er lavet i plots")
