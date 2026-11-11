@@ -53,7 +53,7 @@ def ask_menu_choice(prompt_text: str, valid_choices: list[str], default_choice: 
     )
 
 
-def show_log_table(db_rows: list[tuple], title: str = "Cyber security Logs (SQLite)"):
+def show_log_table(db_rows: list[tuple], title: str = "Cyber security Log (SQLite)"):
     table = Table(title=title, box=box.DOUBLE_EDGE, header_style="bold cyan", width=180)
     table.add_column("ID", style="dim", justify="right")
     table.add_column("Timestamp")

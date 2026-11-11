@@ -5,6 +5,14 @@ from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_lo
 from defDiagramMaker import *
 
 
+def sorterings_vaerdi(item):
+    foerste_element = item[0]
+
+    if foerste_element == "0":
+        return 999  # Send "0" om bag i køen
+    else:
+        return int(foerste_element)  # Lav om til tal for normal sortering
+
 def get_menu_from_db(conn, table_name: str, parent_nr: int | None = None) -> list[tuple[str, str, str]]:
     """
     Henter menupunkter fra tabellen og bruger 'nr' direkte som nøgle.
@@ -27,7 +35,8 @@ def get_menu_from_db(conn, table_name: str, parent_nr: int | None = None) -> lis
                 menu_items.append((str(nr), menuitem, desc or ""))
 
     # Sorter så nr=0 (Tilbage/Afslut) altid ligger nederst
-    menu_items.sort(key=lambda item: 999 if item[0] == "0" else int(item[0]))
+    # Nu sorterer vi listen ved at kalde vores nye funktion
+    menu_items.sort(key=sorterings_vaerdi)
     return menu_items
 
 
@@ -43,11 +52,6 @@ def handle_submenu_1_actions(conn, choice: str):
         console.print("\n[bold green]✔ Rå logfil udlæst til skærmen![/]")
 
     elif choice == "2":
-        if tabel_cleaner(conn, "logdata"):
-            conn.commit()
-            console.print("\n[bold green]✔ Alt eksisterende logindhold i databasen er nu slettet![/]")
-
-    elif choice == "3":
         count = 0
         with open("cyber_security_log_sample.txt", "r", encoding="utf-8") as fil:
             for linie in fil:
@@ -58,6 +62,16 @@ def handle_submenu_1_actions(conn, choice: str):
         conn.commit()
         console.print(f"\n[bold green]✔ {count} loglinjer er parset og indsat i SQLite-databasen![/]")
 
+    elif choice == "3":
+        rows = fetch_all_from_table(conn, "logdata")
+        if rows:
+            show_log_table(rows[:], title=f"Visningstabel: Logdata ({len(rows)} rækker total)")
+
+    elif choice == "4":
+        if tabel_cleaner(conn, "logdata"):
+            conn.commit()
+            console.print("\n[bold green]✔ Alt eksisterende logindhold i databasen er nu slettet![/]")
+
 def handle_submenu_4_actions(conn, choice: str):
     """
     Styrer hvad der sker når der tastes på skærmen/konsollen
@@ -65,35 +79,11 @@ def handle_submenu_4_actions(conn, choice: str):
     :param choice: choice
     """
     if choice == "1":
-        console.print("\n[bold cyan]dannelse af piechart[/]\n")
-        tablename = input("hvilket table vil du have data fra ")
-        data = input("hvilken kolonne skal der laves piechart på ")
-        if piechart(conn, tablename, data, data):
-            console.print("\n[bold cyan]piechart er lavet i plots[/]\n")
+        console.print("\n[bold cyan]Der skal vælges data til indsættelse i piechartet[/]\n")
+        data = input("hvilken data skal der laves piechart på")
 
 
 
-    elif choice == "2":
-        console.print("\n[bold cyan]dannelse af specefic piechart[/]\n")
-        tablename = input("hvilket table vil du have data fra ")
-        data = input("indtast den primære kolonne ")
-        data2 = input("indtast kolonne dit søgekriterie kan findes i ")
-        searchKriteria = input("indtast dit søgekriterie ")
-        if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
-            print("piechart lavet i plots")
-
-
-    elif choice == "3":
-        print("scatter")
-        #scatterplot()
-
-    elif choice == "5":
-        tabelname = input("indtast hvilket table vil du have data fra ")
-        coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
-        value = input("indtast hvilken data der skal laves historik fra ")
-        parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
-        if historyCreater(conn,tabelname,coulum, value, parameter):
-            print("historik er lavet i plots")
 
 
 def run_dynamic_submenu(conn, parent_nr: int, parent_title: str):
@@ -156,7 +146,7 @@ def main_menu():
 
         draw_dos_box(
             title="BUMLE BUSINESS - LOG ANALYSE v1.0",
-            subtitle="Hovedmenu (Hentet fra SQLite - test)",
+            subtitle="Hovedmenu",
             menu_items=main_items,
             border_color="bright_cyan"
         )
@@ -169,7 +159,16 @@ def main_menu():
             conn.close()
             break
 
-        selected_title = next((title for key, title, _ in main_items if key == choice), f"Menu {choice}")
+        selected_title = f"Menu {choice}"
+
+        # Vi løber igennem hvert punkt i listen
+        for item in main_items:
+            key = item[0]  # Første element (f.eks. "1")
+            title = item[1]  # Andet element (f.eks. "Logoperationer")
+            # Hvis nøglen matcher brugerens valg, gemmer vi titlen og stopper
+            if key == choice:
+                selected_title = title
+                break  # 'break' stopper løkken med det samme, da vi har fundet det, vi søgte
         run_dynamic_submenu(conn, int(choice), selected_title)
 
 
