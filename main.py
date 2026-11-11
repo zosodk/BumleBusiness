@@ -80,7 +80,15 @@ def handle_submenu_2_actions(conn, choice: str):
         if len(rows) > 0:
             show_log_table(rows, f"Oversigt over ip historik for {ipaddr}")
         else:
-            print("Nothing to show - wrong ip or no historic data")
+            print("Intet at vise - Prøv med en anden IP-adresse")
+    if choice == "2":
+        #Udvalg af data til tabel historik udfra brugernavn
+        user = input(f"Indtast den bruger du ønsker historik for: ")
+        rows = fetch_logdata_single(conn,"user", user)
+        if len(rows) > 0:
+            show_log_table(rows, f"Oversigt over bruger historik for {user}")
+        else:
+            print("Intet at vise - Prøv med et andet brugernavn")
 
 def handle_submenu_4_actions(conn, choice: str):
     """
