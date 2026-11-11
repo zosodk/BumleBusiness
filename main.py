@@ -1,7 +1,7 @@
 from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata
 from defFileHandler import openLogfile, parse_logline
 from defInit import init_db
-from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table
+from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, fetch_logdata_double
 from defDiagramMaker import *
 
 
@@ -71,6 +71,16 @@ def handle_submenu_1_actions(conn, choice: str):
         if tabel_cleaner(conn, "logdata"):
             conn.commit()
             console.print("\n[bold green]✔ Alt eksisterende logindhold i databasen er nu slettet![/]")
+
+def handle_submenu_2_actions(conn, choice: str):
+    if choice == "1":
+        #Udvalg af data til tabel historik udfra ipadresse
+        ipaddr = input(f"Indtast den ip-adresse du ønsker historik for: ")
+        rows = fetch_logdata_single(conn,"src_ip", ipaddr)
+        if len(rows) > 0:
+            show_log_table(rows, f"Oversigt over ip historik for {ipaddr}")
+        else:
+            print("Nothing to show - wrong ip or no historic data")
 
 def handle_submenu_4_actions(conn, choice: str):
     """
@@ -151,6 +161,8 @@ def run_dynamic_submenu(conn, parent_nr: int, parent_title: str):
 
         if parent_nr == 1:
             handle_submenu_1_actions(conn, choice)
+        elif parent_nr == 2:
+            handle_submenu_2_actions(conn, choice)
         elif parent_nr == 4:
             handle_submenu_4_actions(conn, choice)
         else:

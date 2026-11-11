@@ -85,3 +85,31 @@ def show_log_table(db_rows: list[tuple], title: str = "Cyber security Log (SQLit
 
     console.print()
     console.print(table)
+def fetch_logdata_single(conn, column: str, value: str):
+    """
+    Søger i logdata efter én specifik parameter (f.eks. src_ip eller user).
+    Eksempel: fetch_logdata_single(conn, "src_ip", "198.51.100.23")
+    """
+    cursor = conn.cursor()
+    # Sikkerhedscheck på kolonnenavn for at undgå forkerte anvisninger
+    allowed_columns = ["user", "src_ip", "level", "event", "dest_host", "status"]
+    if column not in allowed_columns:
+        return []
+    else:
+        query = f"SELECT * FROM logdata WHERE {column} = ?"
+        cursor.execute(query, (value,))
+        return cursor.fetchall()
+
+
+def fetch_logdata_double(conn, col1: str, val1: str, col2: str, val2: str):
+    """
+    Søger i logdata med to parametre for højere granularitet.
+    """
+    cursor = conn.cursor()
+    allowed_columns = ["timestamp", "level", "event", "user", "src_ip", "dest_host", "dest_port", "status", "msg"]
+    if col1 not in allowed_columns or col2 not in allowed_columns:
+        return []
+
+    query = f"SELECT * FROM logdata WHERE {col1} = ? AND {col2} = ?"
+    cursor.execute(query, (val1, val2))
+    return cursor.fetchall()
