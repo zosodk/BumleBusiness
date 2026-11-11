@@ -110,17 +110,26 @@ def handle_submenu_4_actions(conn, choice: str):
         tablename = input("hvilket table vil du have data fra ")
         data = input("indtast den primære kolonne ")
         data2 = input("indtast kolonne dit søgekriterie kan findes i ")
+        parameters = fetch_distinct_from_table(conn, tablename, data2)
+        print("\nher er et udvalg af dine parameter")
+        for item in parameters:
+            print(item[0])
         searchKriteria = input("indtast dit søgekriterie ")
         if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
             print("piechart lavet i plots")
 
 
     elif choice == "3":
+        console.print("\n[bold cyan]danellse af scatterplot[/]\n")
         tendenslinje = input("vil du gerne have en tendenslinje ja/nej").lower().strip(" ")
         if tendenslinje == "ja" or tendenslinje == "nej":
             tabelname = input("Indtast hvilket table du vil have data fra ")
             xdata = input("Indtast hvilken kolonne du gerne vil have ad x aksen ")
             ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
+            parameters = fetch_distinct_from_table(conn, tabelname,ydata)
+            print("\nher er et udvalg af dine parameter")
+            for item in parameters:
+                print(item[0])
             parameter = input("indtast dataen du gerne vil se ")
             if tendenslinje == "ja":
                 if scatterplotMedTendensLinje(conn,tabelname,xdata,ydata,parameter):
@@ -132,9 +141,14 @@ def handle_submenu_4_actions(conn, choice: str):
             print("det var ikke ja eller nej til tendenslinjer")
 
     elif choice == "4":
+
         tabelname = input("Indtast hvilket table du vil have data fra ")
         xdata = input("Indtast hvilken kolonne du gerne vil have ad x aksen ")
         ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
+        parameters = fetch_distinct_from_table(conn, tabelname, ydata)
+        print("\nher er et udvalg af dine parameter")
+        for item in parameters:
+            print(item[0])
         parameter = input("indtast dataen du gerne vil se ")
         if barchart(conn, tabelname, xdata, ydata, parameter):
             print("Barchar lavet i plots")
@@ -143,6 +157,10 @@ def handle_submenu_4_actions(conn, choice: str):
         tabelname = input("indtast hvilket table du vil have data fra ")
         coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
         value = input("indtast hvilken data der skal laves historik fra ")
+        parameters = fetch_distinct_from_table(conn, tabelname, value)
+        print("\nher er et udvalg af dine parameter")
+        for item in parameters:
+            print(item[0])
         parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
         if historyCreater(conn,tabelname,coulum, value, parameter):
             print("historik er lavet i plots")

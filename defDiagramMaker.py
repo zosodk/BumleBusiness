@@ -289,7 +289,7 @@ if __name__ == "__main__":
     #barchart(connection, "logdata", "event", "user", "walter", "events",
                 #"walters events", "logdata")
 
-    scatterplotMedTendensLinje(connection, "logdata", "user", "level","ALERT")
+    #scatterplotMedTendensLinje(connection, "logdata", "user", "level","ALERT")
     #piechartspecefic(connection, "logdata", "event", "walters events", "src_ip", "198.51.100.23")
     #timestamper(connection)
     #scatterplotTime(connection, "titel", "xlabel", "ylabel")
