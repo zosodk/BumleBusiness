@@ -108,11 +108,31 @@ def handle_submenu_4_actions(conn, choice: str):
 
 
     elif choice == "3":
-        print("scatter")
-        #scatterplot()
+        tendenslinje = input("vil du gerne have en tendenslinje ja/nej").lower().strip(" ")
+        if tendenslinje == "ja" or tendenslinje == "nej":
+            tabelname = input("Indtast hvilket table du vil have data fra ")
+            xdata = input("Indtast hvilken kolonne du gerne vil have ad x aksen ")
+            ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
+            parameter = input("indtast dataen du gerne vil se ")
+            if tendenslinje == "ja":
+                if scatterplotMedTendensLinje(conn,tabelname,xdata,ydata,parameter):
+                    print("scatter plot med tendenslinje i plots")
+            elif tendenslinje == "nej":
+                if scatterplot(conn,tabelname,xdata,ydata,parameter):
+                    print("scatter plot lavet i plots")
+        else:
+            print("det var ikke ja eller nej til tendenslinjer")
+
+    elif choice == "4":
+        tabelname = input("Indtast hvilket table du vil have data fra ")
+        xdata = input("Indtast hvilken kolonne du gerne vil have ad x aksen ")
+        ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
+        parameter = input("indtast dataen du gerne vil se ")
+        if barchart(conn, tabelname, xdata, ydata, parameter):
+            print("Barchar lavet i plots")
 
     elif choice == "5":
-        tabelname = input("indtast hvilket table vil du have data fra ")
+        tabelname = input("indtast hvilket table du vil have data fra ")
         coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
         value = input("indtast hvilken data der skal laves historik fra ")
         parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")

@@ -4,7 +4,7 @@ import sqlite3
 from sqlite3 import Error
 import matplotlib.pyplot as plt
 
-def scatterplot(conn,tabelname, xdata, ydata, parameter, xlabel, ylabel, titel):
+def scatterplot(conn,tabelname, xdata, ydata, parameter):
     """
     denne funktion tager et vilkårligt table og laver
     et scatter plot ud fra 2 dataer som
@@ -16,9 +16,6 @@ def scatterplot(conn,tabelname, xdata, ydata, parameter, xlabel, ylabel, titel):
     :param xdata:
     :param ydata:
     :param parameter:
-    :param xlabel:
-    :param ylabel:
-    :param titel:
     :return: bool
     """
     try:
@@ -42,9 +39,9 @@ def scatterplot(conn,tabelname, xdata, ydata, parameter, xlabel, ylabel, titel):
         #laver selve plottet
         plt.rcParams["figure.figsize"] = [20, 5]
         plt.scatter(xakse, yakse)
-        plt.title(titel)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        plt.title(f"{xdata} in {parameter}")
+        plt.xlabel(xdata)
+        plt.ylabel(parameter)
 
         plt.show()
         return True
@@ -52,7 +49,7 @@ def scatterplot(conn,tabelname, xdata, ydata, parameter, xlabel, ylabel, titel):
         print(f"Scatterplot failed: {e}")
         return False
 
-def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter, xlabel, ylabel, titel):
+def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter):
     """
     denne funktion tager et vilkårligt table og laver
     et scatter plot ud fra 2 dataer som
@@ -64,9 +61,6 @@ def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter, xlabel, 
     :param xdata:
     :param ydata:
     :param parameter:
-    :param xlabel:
-    :param ylabel:
-    :param titel:
     :return: bool
     """
     try:
@@ -82,7 +76,7 @@ def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter, xlabel, 
             GROUP BY {xdata}
         """, (parameter,))
         data = cursor.fetchall()
-        #print(data)
+        print(data)
         for tuple in data:
             xakse.append(tuple[0])
             yakse.append(tuple[1])
@@ -97,9 +91,9 @@ def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter, xlabel, 
         plt.scatter(x_numeric, yakse)
         plt.plot(x_numeric, [a * x + b for x in x_numeric])
 
-        plt.title(titel)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        plt.title(f'{xdata} sat med {parameter}')
+        plt.xlabel(xdata)
+        plt.ylabel(parameter)
 
         plt.xticks(x_numeric, xakse)
 
@@ -162,7 +156,7 @@ def piechartspecefic(conn,tabelname, coulum, titel, coulum2,parameter):
         print(f"Scatterplot failed: {e}")
         return False
 
-def barchart(conn,tabelname, xdata, ydata, parameter, xlabel, ylabel, titel):
+def barchart(conn,tabelname, xdata, ydata, parameter):
     """
     denne funktion tager et vilkårligt table og laver
     et scatter plot ud fra 2 dataer som
@@ -200,14 +194,14 @@ def barchart(conn,tabelname, xdata, ydata, parameter, xlabel, ylabel, titel):
         #laver selve plottet
         plt.rcParams["figure.figsize"] = [20, 5]
         plt.bar(xakse, yakse)
-        plt.title(titel)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
+        plt.title(f"{xdata} in {parameter}")
+        plt.xlabel(xdata)
+        plt.ylabel(parameter)
 
         plt.show()
         return True
     except Error as e:
-        print(f"Scatterplot failed: {e}")
+        print(f"Barchart failed: {e}")
         return False
 
 def historyCreater(conn,tabelname, coulum, valueInCoulum, parameter):
@@ -295,7 +289,7 @@ if __name__ == "__main__":
     #barchart(connection, "logdata", "event", "user", "walter", "events",
                 #"walters events", "logdata")
 
-    #scatterplotMedTendensLinje(connection, "logdata", "user", "level","ALERT" , "Ipadresses", "walters logins", "logdata")
+    scatterplotMedTendensLinje(connection, "logdata", "user", "level","ALERT")
     #piechartspecefic(connection, "logdata", "event", "walters events", "src_ip", "198.51.100.23")
     #timestamper(connection)
     #scatterplotTime(connection, "titel", "xlabel", "ylabel")
