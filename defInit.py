@@ -39,6 +39,7 @@ def init_db():
         insert_menu_item(conn, "submenu", 2, "Vis specefic piechart", "Funktionen opretter et piechart, der viser fordelingen af hændelser i en valgt kolonne baseret på et bestemt søgekriterie.", 4)
         insert_menu_item(conn, "submenu", 3, "Vis scatterplots","Indsæt data til dannelse af scatterplots", 4)
         insert_menu_item(conn, "submenu", 4, "Vis søjlediagrammer", "Indsæt data til dannelse af søjediagrammer", 4)
+        insert_menu_item(conn, "submenu", 5, "Vis historik", "indsæt en kolonne(fx user) vælg data i kolonne(fx walter) efter hvilken kolonne der skal vises der har sammenhæng med den valgte data", 4)
         insert_menu_item(conn, "submenu", 0, "Tilbage til hovedmenu", "Returnerer til hovedmenuen", 4)
 
         conn.commit()

@@ -84,15 +84,17 @@ def handle_submenu_4_actions(conn, choice: str):
 
 
     elif choice == "3":
-        count = 0
-        with open("cyber_security_log_sample.txt", "r", encoding="utf-8") as fil:
-            for linie in fil:
-                if linie.strip():
-                    parsed = parse_logline(linie)
-                    insert_logdata(conn, "logdata", parsed)
-                    count += 1
-        conn.commit()
-        console.print(f"\n[bold green]✔ {count} loglinjer er parset og indsat i SQLite-databasen![/]")
+        print("scatter")
+        #scatterplot()
+
+    elif choice == "5":
+        tabelname = input("indtast hvilket table vil du have data fra ")
+        coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
+        value = input("indtast hvilken data der skal laves historik fra ")
+        parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
+        if historyCreater(conn,tabelname,coulum, value, parameter):
+            print("historik er lavet i plots")
+
 
 def run_dynamic_submenu(conn, parent_nr: int, parent_title: str):
     """
