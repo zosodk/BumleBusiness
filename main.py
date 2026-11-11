@@ -1,4 +1,4 @@
-from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata
+from defDbHandler import (connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata)
 from defFileHandler import openLogfile, parse_logline
 from defInit import init_db
 from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table
