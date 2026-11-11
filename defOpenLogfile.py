@@ -3,17 +3,20 @@ def parse_logfile_data(path):
     # åben filen
     logfile = open_logfile(path)
 
-    # lad os formatere logfilen så vi har at gøre med en liste af strings
-    logfile_as_list = logfile.split("\n")
+    # lad os formatere log-filen så vi har at gøre med en liste af strings
+    logfile_as_list_of_strings = logfile.split("\n")
 
     # filens indhold skal tjekkes for mangler
-    timestamp = has_timestamps(logfile_as_list)
+    timestamp = has_timestamps(logfile_as_list_of_strings)
+
+    # lad os formatere filen inden vi kontrollerer dens indhold yderligere for de forventede søjler
+    logfile_as_list_of_directories = format_logfile(logfile_as_list_of_strings)
 
     # vi vil tjekke om filen indeholder et timestamp og om filen indeholder de oplysninger som vi forventer
     # vi forventer følgende indhold:
     expected_content = ["level", "user", "src_ip", "dest_host", "dest_port", "status", "msg"]
 
-    has_content = has_expected_content(logfile_as_list, expected_content)
+    has_content = has_expected_content(logfile_as_list_of_directories, expected_content)
 
     return timestamp and has_content
 
@@ -37,6 +40,17 @@ def has_timestamps(logfile):
         return False
 
 def has_expected_content(logfile, list_of_expected_content):
+    modified_logfile = logfile.copy()
+    length_original_logfile = len(logfile)
+    counter = 0
+
+    for log_entry in modified_logfile:
+        if set(list_of_expected_content).issubset(log_entry.keys()):
+            counter +=1
+
+    return counter == length_original_logfile
+
+def format_logfile(logfile):
     import shlex
     temp_logfile = logfile.copy()
     modified_logfile = []
@@ -54,14 +68,7 @@ def has_expected_content(logfile, list_of_expected_content):
 
         modified_logfile.append(log_entry)
 
-    length_original_logfile = len(logfile)
-    counter = 0
-
-    for log_entry in modified_logfile:
-        if set(list_of_expected_content).issubset(log_entry.keys()):
-            counter +=1
-
-    return counter == length_original_logfile
+    return modified_logfile
 
 def open_logfile(path):
     try:
