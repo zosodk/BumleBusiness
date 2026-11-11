@@ -62,6 +62,15 @@ def has_expected_content(logfile, list_of_expected_content):
         print("a")
 
 def format_logfile(logfile):
+
+    # Hvis logfil ikke er en liste, så alarmer brugeren om at vi forventer en liste
+    if not isinstance(logfile, list):
+        raise TypeError("Expected a list.")
+
+    # Vi skal også tjekke om
+    if not all(isinstance(log, str) for log in logfile):
+        raise TypeError("All logs in the list must be strings.")
+
     try:
         import shlex
         temp_logfile = logfile.copy()
