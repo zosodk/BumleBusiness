@@ -79,8 +79,35 @@ def handle_submenu_4_actions(conn, choice: str):
     :param choice: choice
     """
     if choice == "1":
-        console.print("\n[bold cyan]Der skal vælges data til indsættelse i piechartet[/]\n")
-        data = input("hvilken data skal der laves piechart på")
+        console.print("\n[bold cyan]dannelse af piechart[/]\n")
+        tablename = input("hvilket table vil du have data fra ")
+        data = input("hvilken kolonne skal der laves piechart på ")
+        if piechart(conn, tablename, data, data):
+            console.print("\n[bold cyan]piechart er lavet i plots[/]\n")
+
+
+
+    elif choice == "2":
+        console.print("\n[bold cyan]dannelse af specefic piechart[/]\n")
+        tablename = input("hvilket table vil du have data fra ")
+        data = input("indtast den primære kolonne ")
+        data2 = input("indtast kolonne dit søgekriterie kan findes i ")
+        searchKriteria = input("indtast dit søgekriterie ")
+        if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
+            print("piechart lavet i plots")
+
+
+    elif choice == "3":
+        print("scatter")
+        #scatterplot()
+
+    elif choice == "5":
+        tabelname = input("indtast hvilket table vil du have data fra ")
+        coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
+        value = input("indtast hvilken data der skal laves historik fra ")
+        parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
+        if historyCreater(conn,tabelname,coulum, value, parameter):
+            print("historik er lavet i plots")
 
 
 
