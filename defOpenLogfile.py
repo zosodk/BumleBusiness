@@ -85,8 +85,14 @@ def format_logfile(logfile):
         print("a")
 
 def open_logfile(path):
-    try:
+    from pathlib import Path
 
+    # Kontroller filendelse først
+    # Hvorfor? Fordi vi forventer en .txt fil med logdata
+    if Path(path).suffix.lower() != ".txt":
+        return "Vælg venligst en .txt fil med logdata."
+
+    try:
         # hvis koden her nedenfor kører, så kan filen læses
         with open(path, "r") as logfile:
             content = logfile.read()
@@ -114,4 +120,3 @@ def open_logfile(path):
 
 
 file = parse_logfile_data("cyber_security_log_sample.txt")
-print(file)
