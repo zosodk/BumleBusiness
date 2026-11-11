@@ -20,8 +20,12 @@ def parse_logfile_data(path):
 
         if timestamp and has_content:
             return logfile_as_list_of_directories
+
+    except FileNotFoundError:
+        return "File not found."
+
     except:
-        print("a")
+        return "An unknown error occurred."
 
 
 def has_timestamps(logfile):
