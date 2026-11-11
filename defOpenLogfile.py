@@ -79,6 +79,7 @@ def format_logfile(logfile):
         for line in temp_logfile:
             temp_line = shlex.split(line)
 
+            print(temp_line)
             save_initial_value = temp_line[0]
             temp_line[0] = f"timestamp={save_initial_value}"
 
@@ -90,8 +91,10 @@ def format_logfile(logfile):
             modified_logfile.append(log_entry)
 
         return modified_logfile
-    except NameError:
-        print("a")
+    except ValueError:
+        return "Log indeholder ikke et lighedstegn ('=')."
+    except IndexError:
+        return "FEJL: Den valgte liste er tom."
 
 def open_logfile(path):
     from pathlib import Path
