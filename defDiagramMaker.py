@@ -110,116 +110,58 @@ def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter, xlabel, 
         return False
 
 def piechart(conn,tabelname, coulum, titel):
-    labels = []
-    count = []
-    cursor = conn.cursor()
-
-    # læser et table og finder hvor mange gange en bestemt ting sker
-    cursor.execute(f"""
-                SELECT {coulum}, COUNT(*)
-                FROM {tabelname}
-                GROUP BY {coulum}
-            """,)
-    data = cursor.fetchall()
-    # print(data)
-    for tuple in data:
-        labels.append(tuple[0])
-        count.append(tuple[1])
-
-    plt.pie(count, labels=labels, autopct='%1.1f%%')
-    plt.title(titel)
-    plt.show()
-def timestamperlevel(conn,time):
-    cursor = conn.cursor()
-    cursor.execute(f"""
-    SELECT 
-        datetime((unixepoch(timestamp) / {time}) * {time}, 'unixepoch') AS interval_start,
-        COUNT(*) AS total_events,
-        SUM(CASE WHEN level = 'INFO' THEN 1 ELSE 0 END) AS count_info,
-        SUM(CASE WHEN level = 'WARN' THEN 1 ELSE 0 END) AS count_warn,
-        SUM(CASE WHEN level = 'ALERT' THEN 1 ELSE 0 END) AS count_alert,
-        -- Højeste sværhedsgrad i det pågældende kvarter
-        MAX(CASE UPPER(level)
-            WHEN 'INFO'  THEN 1
-            WHEN 'WARN'  THEN 2
-            WHEN 'ALERT' THEN 3
-            ELSE 0
-        END) AS peak_severity
-    FROM 
-        logdata
-    WHERE event = 'PORT_SCAN_DETECTED' OR 'MALWARE_SIGNATURE_MATCH'
-    GROUP BY 
-        interval_start
-    ORDER BY 
-        interval_start ASC;
-        """)
-    data = cursor.fetchall()
-    return data
-
-def timestamperevent(conn,time):
-    cursor = conn.cursor()
-    cursor.execute(f"""
-    SELECT 
-        datetime((unixepoch(timestamp) / {time}) * {time}, 'unixepoch') AS interval_start,
-        COUNT(*) AS total_events,
-        SUM(CASE WHEN event = 'LOGIN_FAILED' THEN 1 ELSE 0 END) AS count_LOGIN_FAILED,
-        SUM(CASE WHEN event = 'FILE_ACCESS_DENIED' THEN 1 ELSE 0 END) AS count_FILE_ACCESS_DENIED,
-        SUM(CASE WHEN level = 'PASSWORD_RESET' THEN 1 ELSE 0 END) AS count_PASSWORD_RESET,
-        SUM(CASE WHEN level = 'PORT_SCAN_DETECTED' THEN 1 ELSE 0 END) AS count_PORT_SCAN_DETECTED,
-        SUM(CASE WHEN level = 'PRIVILEGE_ESCALATION_ATTEMPT' THEN 1 ELSE 0 END) AS count_PRIVILEGE_ESCALATION_ATTEMPT,
-        SUM(CASE WHEN level = 'USB_DEVICE_ATTACHED' THEN 1 ELSE 0 END) AS count_USB_DEVICE_ATTACHED,
-        SUM(CASE WHEN level = 'MALWARE_SIGNATURE_MATCH' THEN 1 ELSE 0 END) AS count_MALWARE_SIGNATURE_MATCH,
-        -- Højeste sværhedsgrad i det pågældende kvarter
-        MAX(CASE UPPER(level)
-            WHEN 'LOGIN_FAILED'  THEN 1
-            WHEN 'FILE_ACCESS_DENIED'  THEN 2
-            WHEN 'PASSWORD_RESET' THEN 3
-            WHEN 'PORT_SCAN_DETECTED' THEN 4
-            WHEN 'PRIVILEGE_ESCALATION_ATTEMPT' THEN 5
-            WHEN 'USB_DEVICE_ATTACHED' THEN 6
-            WHEN 'MALWARE_SIGNATURE_MATCH' THEN 7
-            ELSE 0
-        END) AS peak_severity
-    FROM 
-        logdata
-    WHERE status = 'OK'
-    GROUP BY 
-        interval_start
-    ORDER BY 
-        interval_start ASC;
-        """)
-    data = cursor.fetchall()
-    return data
-
-def scatterplotTime(conn, titel,xlabel,ylabel ):
-    levelType = int(input(f"skriv 1 for at se info\n"
-                      f"skriv 2 for at se warnings\n"
-                      f"skriv 3 for at se alerts"))
-
-    tidsinterval = int(input(f"skriv dit tidsinterval i minutter"))
-    tidsinterval *= 60
-    xakse = []
-    yakse = []
     try:
-        data = timestamperevent(conn, tidsinterval)
-        print(data)
+        labels = []
+        count = []
+        cursor = conn.cursor()
+
+        # læser et table og finder hvor mange gange en bestemt ting sker
+        cursor.execute(f"""
+                    SELECT {coulum}, COUNT(*)
+                    FROM {tabelname}
+                    GROUP BY {coulum}
+                """,)
+        data = cursor.fetchall()
+        # print(data)
         for tuple in data:
-            if tuple[levelType+1] > 0:
-                xakse.append(tuple[0])
-                yakse.append(tuple[levelType+1])
+            labels.append(tuple[0])
+            count.append(tuple[1])
 
-        #laver selve plottet
-        plt.rcParams["figure.figsize"] = [20, 5]
-        plt.bar(xakse, yakse)
+        plt.pie(count, labels=labels, autopct='%1.1f%%')
         plt.title(titel)
-        plt.xlabel(xlabel)
-        plt.ylabel(ylabel)
-
         plt.show()
         return True
     except Error as e:
         print(f"Scatterplot failed: {e}")
         return False
+
+def piechartspecefic(conn,tabelname, coulum, titel, coulum2,parameter):
+    try:
+        labels = []
+        count = []
+        cursor = conn.cursor()
+
+        # læser et table og finder hvor mange gange en bestemt ting sker
+        cursor.execute(f"""
+                    SELECT {coulum}, COUNT(*)
+                    FROM {tabelname}
+                    WHERE {coulum2} = ?
+                    GROUP BY {coulum}
+                """,(parameter,))
+        data = cursor.fetchall()
+        # print(data)
+        for tuple in data:
+            labels.append(tuple[0])
+            count.append(tuple[1])
+
+        plt.pie(count, labels=labels, autopct='%1.1f%%')
+        plt.title(titel)
+        plt.show()
+        return True
+    except Error as e:
+        print(f"Scatterplot failed: {e}")
+        return False
+
 def barchart(conn,tabelname, xdata, ydata, parameter, xlabel, ylabel, titel):
     """
     denne funktion tager et vilkårligt table og laver
@@ -268,25 +210,82 @@ def barchart(conn,tabelname, xdata, ydata, parameter, xlabel, ylabel, titel):
         print(f"Scatterplot failed: {e}")
         return False
 
-def allUserEvents(conn, user, tabelname):
-    cursor = conn.cursor()
-    cursor.execute(f"""SELECT * FROM {tabelname} WHERE user = '{user}' """)
-    data = cursor.fetchall()
-    return data
+def historyCreater(conn,tabelname, coulum, valueInCoulum, parameter):
+    try:
+        cur = conn.cursor()
+        timestamp = []
+        searchList = []
 
+        cur.execute(f"SELECT * FROM {tabelname} WHERE {coulum} = ?", (valueInCoulum,))
+        df = cur.fetchall()
+        # Luk forbindelsen
+        conn.close()
+
+        # Tjek om der er data
+        if len(df) <= 0:
+          print('Ingen data fundet for denne IP-adresse.')
+        else:
+          # Konverter tidskolonnen til datetime-objekter
+          #
+            if parameter == "level":
+                paramIndex = 2
+            elif parameter == "event":
+                paramIndex = 3
+            elif parameter == "user":
+                paramIndex = 4
+            elif parameter == "src_ip":
+                paramIndex = 5
+            elif parameter == "dest_host":
+                paramIndex = 6
+            elif parameter == "dest_port":
+                paramIndex = 7
+            elif parameter == "msg":
+                paramIndex = 8
+            for tuple in df:
+                timestamp.append(tuple[1])
+                searchList.append(tuple[paramIndex])
+
+
+            # Opsætning af Scatter Plot
+            plt.figure(figsize=(20, 6))
+
+            # Plot tidspunkt (X-akse) mod f.eks. statuskode (Y-akse)
+            # Erstat 'status_code' med den kolonne derskal analyseres på Y-aksen
+            plt.scatter(
+                timestamp,
+                searchList,
+                alpha=0.7,
+                edgecolors='k',
+                s=50,
+                color='royalblue',
+            )
+
+            plt.title(
+              f'{parameter} for {coulum} : {valueInCoulum} (taken from database)', fontsize=14
+            )
+
+            plt.xlabel('timestamp', fontsize=12)
+            plt.ylabel('values', fontsize=12)
+
+            # Gør datoerne på X-aksen læsevenlige
+            plt.gcf().autofmt_xdate()
+
+            plt.grid(True, linestyle='--', alpha=0.5)
+            plt.tight_layout()
+
+            # Vis plottet
+            plt.show()
+            return True
+    except Error as e:
+        print(f"historik failed: {e}")
 
 if __name__ == "__main__":
     connection = connect_to_db()
 
-    #print ønsked bruger
-    #bruger = input(f"indtast ønsked brugers navn")
-    #historik = allUserEvents(connection, bruger, 'logdata')
-    #for item in historik:
-    #    print(item)
     #scatterplot(connection, "logdata", 'timestamp', 'user', 'walter', "time", "events","logdata" )
 
     #malware per user detected
-    #scatterplot(connection, "logdata", "user","event", "MALWARE_SIGNATURE_MATCH", "users", "amount of malware per user detected", "logdata")
+    #scatterplot(connection, "logdata", "event","src_ip", "198.51.100.23", "users", "amount of malware per user detected", "logdata")
     #barchart(connection, "logdata", "user", "event", "MALWARE_SIGNATURE_MATCH", "users",
                 #"amount of malware per user detected", "logdata")
 
@@ -297,7 +296,7 @@ if __name__ == "__main__":
                 #"walters events", "logdata")
 
     #scatterplotMedTendensLinje(connection, "logdata", "user", "level","ALERT" , "Ipadresses", "walters logins", "logdata")
-    piechart(connection, "logdata", "event", "logdata")
+    #piechartspecefic(connection, "logdata", "event", "walters events", "src_ip", "198.51.100.23")
     #timestamper(connection)
-    scatterplotTime(connection,"titel", "xlabel", "ylabel")
+    #scatterplotTime(connection, "titel", "xlabel", "ylabel")
 

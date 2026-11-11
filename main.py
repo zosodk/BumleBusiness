@@ -116,7 +116,7 @@ def run_dynamic_submenu(conn, parent_nr: int, parent_title: str):
         )
 
         valid_keys = [item[0] for item in submenu_items]
-        #default choice i submenu sættes til at gå til bage til hovedmenu
+        #default choice i submenu sættes til at gå tilbage til hovedmenu
         choice = ask_menu_choice("Vælg funktion", valid_keys, default_choice="0")
 
         if choice == "0":
