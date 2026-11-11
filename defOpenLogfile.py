@@ -48,6 +48,23 @@ def has_timestamps(logfile):
         print("a")
 
 def has_expected_content(logfile, list_of_expected_content):
+
+    # Logfile should be a list of dictionaries
+    if not isinstance(logfile, list):
+        raise TypeError("For logfile we expect a list.")
+
+    # Vi skal tjekke om indholdet i logfile er dictionaries, som vi forventer
+    if not all(isinstance(log, dict) for log in logfile):
+        raise TypeError("All items in logfile must be dictionaries.")
+
+    # Hvis list_of_expected_content ikke er en liste, alarmér brugeren herom
+    if not isinstance(list_of_expected_content, list):
+        raise TypeError("For list_of_expected_content we expected a list.")
+
+    # Vi skal tjekke om indholdet i list_of_expected_content er strings, ligesom vi forventer
+    if not all(isinstance(prop, str) for prop in list_of_expected_content):
+        raise TypeError("All items in the list_of_expected_content must be strings.")
+
     try:
         modified_logfile = logfile.copy()
         length_original_logfile = len(logfile)
@@ -58,8 +75,9 @@ def has_expected_content(logfile, list_of_expected_content):
                 counter +=1
 
         return counter == length_original_logfile
-    except NameError:
-        print("a")
+
+    except:
+        return 'Something else went wrong.'
 
 def format_logfile(logfile):
 
@@ -67,7 +85,7 @@ def format_logfile(logfile):
     if not isinstance(logfile, list):
         raise TypeError("Expected a list.")
 
-    # Vi skal også tjekke om
+    # Vi skal også tjekke om hver log er en string
     if not all(isinstance(log, str) for log in logfile):
         raise TypeError("All logs in the list must be strings.")
 
@@ -79,7 +97,6 @@ def format_logfile(logfile):
         for line in temp_logfile:
             temp_line = shlex.split(line)
 
-            print(temp_line)
             save_initial_value = temp_line[0]
             temp_line[0] = f"timestamp={save_initial_value}"
 
