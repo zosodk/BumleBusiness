@@ -121,13 +121,13 @@ def console_print_list(items: list, title: str = "Udvidet søgning"):
         show_header=False,
         box=None,
         padding=(1, 2),
-        width=300,
+        width=180,
         expand=True
     )
 
-    menu_table.add_column("Resultat 1", justify="center",width=100)
-    menu_table.add_column("Resultat 2", justify="center",width=100)
-    menu_table.add_column("Resultat 3", justify="center",width=100)
+    menu_table.add_column("Resultat 1", justify="center",width=60)
+    menu_table.add_column("Resultat 2", justify="center",width=60)
+    menu_table.add_column("Resultat 3", justify="center",width=60)
 
     for i in range(0, len(items), 3):
         row = items[i:i + 3]
