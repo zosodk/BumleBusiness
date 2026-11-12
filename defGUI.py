@@ -5,6 +5,7 @@ from rich.panel import Panel
 from rich.table import Table
 from rich.prompt import Prompt
 from rich import box
+from sqlite3 import Error
 
 if os.name == "nt":
     import ctypes
@@ -146,35 +147,36 @@ def console_print_list(items: list, title: str = "Udvidet søgning"):
     console.print(panel)
 
 def magic_print_list(items: list, title: str = "Simpel søgning"):
-    console = Console()
 
-    table = Table(
-        title=f"[bold cyan]{title}[/]",
-        box=box.DOUBLE_EDGE,
-        header_style="bold cyan",
-        width=180,
-        expand=True  # Sørg for at tabellen spredes ud over hele bredden
-    )
 
-    table.add_column("Resultat 1", justify="center")
-    table.add_column("Resultat 2", justify="center")
-    table.add_column("Resultat 3", justify="center")
+    try:
+        console = Console(width=180)
+        console.clear()
 
-    for i in range(0, len(items), 3):
-        row = items[i:i + 3]
+        table = Table(title=title, box=box.DOUBLE_EDGE, header_style="bold cyan", width=180)
 
-        # Udtræk værdien hvis elementet er en tuple/liste, ellers brug item direkte
-        cleaned_row = []
-        for item in row:
-            if isinstance(item, (tuple, list)) and len(item) > 0:
-                cleaned_row.append(str(item[0]))
-            else:
-                cleaned_row.append(str(item))
+        table.add_column("Resultat 1", justify="center")
+        table.add_column("Resultat 2", justify="center")
+        table.add_column("Resultat 3", justify="center")
 
-        # Fyld op med tomme strenge hvis rækken ikke har 3 elementer
-        while len(cleaned_row) < 3:
-            cleaned_row.append("")
+        for i in range(0, len(items), 3):
+            row = items[i:i + 3]
 
-        table.add_row(*cleaned_row)
+            # Udtræk værdien hvis elementet er en tuple/liste, ellers brug item direkte
+            cleaned_row = []
+            for item in row:
+                if isinstance(item, (tuple, list)) and len(item) > 0:
+                    cleaned_row.append(str(item[0]))
+                else:
+                    cleaned_row.append(str(item))
 
-    console.print(table)
+            # Fyld op med tomme strenge hvis rækken ikke har 3 elementer
+            while len(cleaned_row) < 3:
+                cleaned_row.append("")
+
+            table.add_row(*cleaned_row)
+
+        console.print(table)
+    except Error as e:
+        print("Kewin fejlede her")
+

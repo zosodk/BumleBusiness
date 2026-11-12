@@ -131,10 +131,12 @@ def fetch_distinct_from_table(conn, tablename, parameter):
     """
     Henter specefic data fra et table
     """
-    cursor = conn.cursor()
-    cursor.execute(f"SELECT DISTINCT {parameter} FROM {tablename}")
-    return cursor.fetchall()
-
+    try:
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT DISTINCT {parameter} FROM {tablename}")
+        return cursor.fetchall()
+    except Error as e:
+        print(f"fejl under udtræk af tabel - forkert angivet navn på tabel: {e}")
 
 if __name__ == "__main__":
     #Test af funktionalitet

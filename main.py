@@ -156,14 +156,17 @@ def handle_submenu_4_actions(conn, choice: str):
         data2 = input("indtast kolonne dit søgekriterie kan findes i ")
         parameters = fetch_distinct_from_table(conn, tablename, data2)
         print("\nher er et udvalg af dine parameter")
-        items = []
-        for item in parameters:
-            items.append(item[0])
-        console_print_list(items)
-        searchKriteria = input("indtast dit søgekriterie ")
-        if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
-            print("piechart lavet i plots")
-
+        try:
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            #console_print_list(items)
+            magic_print_list(items)
+            searchKriteria = input("indtast dit søgekriterie ")
+            if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
+                print("piechart lavet i plots")
+        except Error as e:
+            print("et eller andet fucking lige gyldigt")
 
     elif choice == "3":
         console.print("\n[bold cyan]danellse af scatterplot[/]\n")
@@ -174,18 +177,24 @@ def handle_submenu_4_actions(conn, choice: str):
             ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
             parameters = fetch_distinct_from_table(conn, tabelname,ydata)
             print("\nher er et udvalg af dine parameter")
-            items = []
-            for item in parameters:
-                items.append(item[0])
-            console_print_list(items)
-
-            parameter = input("indtast dataen du gerne vil se ")
-            if tendenslinje == "ja":
-                if scatterplotMedTendensLinje(conn,tabelname,xdata,ydata,parameter):
-                    print("scatter plot med tendenslinje i plots")
-            elif tendenslinje == "nej":
-                if scatterplot(conn,tabelname,xdata,ydata,parameter):
-                    print("scatter plot lavet i plots")
+            try:
+                items = []
+                if parameters:
+                    for item in parameters:
+                        items.append(item[0])
+                    #console_print_list(items)
+                    magic_print_list(items)
+                    parameter = input("indtast dataen du gerne vil se ")
+                    if tendenslinje == "ja":
+                        if scatterplotMedTendensLinje(conn,tabelname,xdata,ydata,parameter):
+                            print("scatter plot med tendenslinje i plots")
+                    elif tendenslinje == "nej":
+                        if scatterplot(conn,tabelname,xdata,ydata,parameter):
+                            print("scatter plot lavet i plots")
+                else:
+                    print("Ingen data i tabel - angivet forkert tabel navn")
+            except Error as e:
+                print("Et etnmvlfdsngds")
         else:
             print("det var ikke ja eller nej til tendenslinjer")
 
@@ -195,11 +204,15 @@ def handle_submenu_4_actions(conn, choice: str):
         ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
 
         parameters = fetch_distinct_from_table(conn, tabelname, ydata)
-        print("\nher er et udvalg af dine parameter")
-        items = []
-        for item in parameters:
-            items.append(item[0])
-        console_print_list(items)
+        if len(parameters) > 0:
+            print("\nher er et udvalg af dine parameter")
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            #console_print_list(items)
+            magic_print_list(items)
+        else:
+            print("ingen resultater fundet - prøv igen")
 
         parameter = input("indtast dataen du gerne vil se ")
         if barchart(conn, tabelname, xdata, ydata, parameter):
@@ -214,7 +227,8 @@ def handle_submenu_4_actions(conn, choice: str):
         items = []
         for item in parameters:
             items.append(item[0])
-        console_print_list(items)
+        #console_print_list(items)
+        magic_print_list(items)
 
         value = input("indtast hvilken data der skal laves historik fra ")
         parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
