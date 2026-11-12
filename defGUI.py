@@ -120,14 +120,12 @@ def console_print_list(items: list, title: str = "Udvidet søgning"):
     menu_table = Table(
         show_header=False,
         box=None,
-        padding=(1, 2),
-        width=180,
+        padding=(1, 1),
         expand=True
     )
+    for n in range(1,4):
+        menu_table.add_column(f"Resultat {n}", justify="center",ratio=1, overflow="fold")
 
-    menu_table.add_column("Resultat 1", justify="center",width=60)
-    menu_table.add_column("Resultat 2", justify="center",width=60)
-    menu_table.add_column("Resultat 3", justify="center",width=60)
 
     for i in range(0, len(items), 3):
         row = items[i:i + 3]
@@ -141,8 +139,7 @@ def console_print_list(items: list, title: str = "Udvidet søgning"):
         title=f"[bold black on white] {title} [/]",
         box=box.DOUBLE,
         border_style="bright_cyan",
-        padding=(1, 2),
-        width=300,
+        padding=(1, 1),
         expand=True
     )
 
