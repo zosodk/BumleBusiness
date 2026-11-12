@@ -7,10 +7,10 @@ from rich.prompt import Prompt
 from rich import box
 
 if os.name == "nt":
-  import ctypes
+    import ctypes
 
-kernel32 = ctypes.windll.kernel32
-kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+    kernel32 = ctypes.windll.kernel32
+    kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 os.environ.setdefault("TERM", "xterm-256color")
 os.environ.setdefault("COLORTERM", "truecolor")
 console = Console(force_terminal=True, color_system="truecolor", width=180)
@@ -117,20 +117,33 @@ def fetch_logdata_double(conn, col1: str, val1: str, col2: str, val2: str):
 def console_print_list(items: list, title: str = "Udvidet søgning"):
     console = Console()
 
-    table = Table(
-        title=f"[bold cyan]{title}[/]",
-        box=box.DOUBLE_EDGE,
-        header_style="bold cyan",
-        width=180
+    menu_table = Table(
+        show_header=False,
+        box=None,
+        padding=(1, 2),
+        width=300,
+        expand=True
     )
 
-    table.add_column("Resultat 1", justify="center")
-    table.add_column("Resultat 2", justify="center")
-    table.add_column("Resultat 3", justify="center")
+    menu_table.add_column("Resultat 1", justify="center",width=100)
+    menu_table.add_column("Resultat 2", justify="center",width=100)
+    menu_table.add_column("Resultat 3", justify="center",width=100)
 
     for i in range(0, len(items), 3):
         row = items[i:i + 3]
 
-        table.add_row(*[str(item) for item in row])
+        menu_table.add_row(
+            *[str(item) for item in row],
+        )
 
-    console.print(table)
+    panel = Panel(
+        menu_table,
+        title=f"[bold black on white] {title} [/]",
+        box=box.DOUBLE,
+        border_style="bright_cyan",
+        padding=(1, 2),
+        width=300,
+        expand=True
+    )
+
+    console.print(panel)
