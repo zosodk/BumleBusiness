@@ -1,7 +1,8 @@
 from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata,fetch_distinct_from_table
 from defFileHandler import openLogfile, parse_logline
 from defInit import init_db
-from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, fetch_logdata_double
+from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, \
+    fetch_logdata_double, console_print_list
 from defDiagramMaker import *
 
 
@@ -98,6 +99,42 @@ def handle_submenu_2_actions(conn, choice: str):
         else:
             print("Intet at vise - Prøv med et andet brugernavn")
 
+def handle_submenu_3_actions(conn, choice: str):
+    if choice == "1":
+        #laver udvalg af ip'er
+        parameters = fetch_distinct_from_table(conn, "logdata", "src_ip")
+        print("\nher er et udvalg de mulige ip'er")
+        items = []
+        for item in parameters:
+            items.append(item[0])
+        console_print_list(items)
+
+        ipaddr = input(f"Indtast den ip-adresse du ønsker historik over eventsne: ").strip()
+
+        #laver udvalg af events
+        parameters = fetch_distinct_from_table(conn, "logdata", "event")
+        print("\nher er et udvalg af de mulige events")
+        items = []
+        for item in parameters:
+            items.append(item[0])
+        console_print_list(items)
+
+        events = input(f"hvilke events vil du gerne have historik over ").strip().upper()
+        rows = fetch_logdata_double(conn,"src_ip", ipaddr,"event",events)
+        if len(rows) > 0:
+            show_log_table(rows, f"Oversigt over ip historik for {ipaddr} og forbundet med event {events}")
+        else:
+            print("Intet at vise - Prøv med en anden IP-adresse eller event")
+
+    if choice == "2":
+        #Udvalg af data til tabel historik udfra brugernavn
+        user = input(f"Indtast den bruger du ønsker historik for: ")
+        rows = fetch_logdata_single(conn,"user", user)
+        if len(rows) > 0:
+            show_log_table(rows, f"Oversigt over bruger historik for {user}")
+        else:
+            print("Intet at vise - Prøv med et andet brugernavn")
+
 def handle_submenu_4_actions(conn, choice: str):
     """
     Styrer hvad der sker når der tastes på skærmen/konsollen
@@ -120,8 +157,10 @@ def handle_submenu_4_actions(conn, choice: str):
         data2 = input("indtast kolonne dit søgekriterie kan findes i ")
         parameters = fetch_distinct_from_table(conn, tablename, data2)
         print("\nher er et udvalg af dine parameter")
+        items = []
         for item in parameters:
-            print(item[0])
+            items.append(item[0])
+        console_print_list(items)
         searchKriteria = input("indtast dit søgekriterie ")
         if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
             print("piechart lavet i plots")
@@ -136,8 +175,11 @@ def handle_submenu_4_actions(conn, choice: str):
             ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
             parameters = fetch_distinct_from_table(conn, tabelname,ydata)
             print("\nher er et udvalg af dine parameter")
+            items = []
             for item in parameters:
-                print(item[0])
+                items.append(item[0])
+            console_print_list(items)
+
             parameter = input("indtast dataen du gerne vil se ")
             if tendenslinje == "ja":
                 if scatterplotMedTendensLinje(conn,tabelname,xdata,ydata,parameter):
@@ -149,14 +191,17 @@ def handle_submenu_4_actions(conn, choice: str):
             print("det var ikke ja eller nej til tendenslinjer")
 
     elif choice == "4":
-
         tabelname = input("Indtast hvilket table du vil have data fra ")
         xdata = input("Indtast hvilken kolonne du gerne vil have ad x aksen ")
         ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
+
         parameters = fetch_distinct_from_table(conn, tabelname, ydata)
         print("\nher er et udvalg af dine parameter")
+        items = []
         for item in parameters:
-            print(item[0])
+            items.append(item[0])
+        console_print_list(items)
+
         parameter = input("indtast dataen du gerne vil se ")
         if barchart(conn, tabelname, xdata, ydata, parameter):
             print("Barchar lavet i plots")
@@ -164,10 +209,14 @@ def handle_submenu_4_actions(conn, choice: str):
     elif choice == "5":
         tabelname = input("indtast hvilket table du vil have data fra ")
         coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
+
         parameters = fetch_distinct_from_table(conn, tabelname, coulum)
         print("\nher er et udvalg af dine parameter")
+        items = []
         for item in parameters:
-            print(item[0])
+            items.append(item[0])
+        console_print_list(items)
+
         value = input("indtast hvilken data der skal laves historik fra ")
         parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
         if historyCreater(conn,tabelname,coulum, value, parameter):
@@ -217,6 +266,8 @@ def run_dynamic_submenu(conn, parent_nr: int, parent_title: str):
             handle_submenu_1_actions(conn, choice)
         elif parent_nr == 2:
             handle_submenu_2_actions(conn, choice)
+        elif parent_nr == 3:
+            handle_submenu_3_actions(conn, choice)
         elif parent_nr == 4:
             handle_submenu_4_actions(conn, choice)
         else:
