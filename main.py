@@ -76,7 +76,7 @@ def handle_submenu_2_actions(conn, choice: str):
     if choice == "1":
         #Udvalg af data til tabel historik udfra ipadresse
         print(f"Der er følgende ipadresser at vælge imellem i databasen: ")
-        print(fetch_distinct_from_table(conn, "logdata", "src_ip"))
+        #print(fetch_distinct_from_table(conn, "logdata", "src_ip"))
 
         ipaddr = input(f"Indtast den ip-adresse du ønsker historik for: ")
 
@@ -88,7 +88,7 @@ def handle_submenu_2_actions(conn, choice: str):
     if choice == "2":
         #Udvalg af data til tabel historik udfra brugernavn
         print(f"Der er følgende bruger i databasen: ")
-        print(fetch_distinct_from_table(conn, "logdata", "user"))
+        #print(fetch_distinct_from_table(conn, "logdata", "user"))
 
         user = input(f"Indtast den bruger du ønsker historik for: ")
 
