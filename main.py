@@ -102,28 +102,34 @@ def handle_submenu_3_actions(conn, choice: str):
     if choice == "1":
         #laver udvalg af ip'er
         parameters = fetch_distinct_from_table(conn, "logdata", "src_ip")
-        print("\nher er et udvalg de mulige ip'er")
-        items = []
-        for item in parameters:
-            items.append(item[0])
-        console_print_list(items)
+        if parameters:
+            print("\nher er et udvalg de mulige ip'er")
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            console_print_list(items)
 
-        ipaddr = input(f"Indtast den ip-adresse du ønsker historik over eventsne: ").strip()
+            ipaddr = input(f"Indtast den ip-adresse du ønsker historik over eventsne: ").strip()
+        else:
+            print("ingen ip'er findes")
 
         #laver udvalg af events
         parameters = fetch_distinct_from_table(conn, "logdata", "event")
-        print("\nher er et udvalg af de mulige events")
-        items = []
-        for item in parameters:
-            items.append(item[0])
-        console_print_list(items)
+        if parameters:
+            print("\nher er et udvalg af de mulige events")
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            console_print_list(items)
 
-        events = input(f"hvilke events vil du gerne have historik over ").strip().upper()
-        rows = fetch_logdata_double(conn,"src_ip", ipaddr,"event",events)
-        if len(rows) > 0:
-            show_log_table(rows, f"Oversigt over ip historik for {ipaddr} og forbundet med event {events}")
+            events = input(f"hvilke events vil du gerne have historik over ").strip().upper()
+            rows = fetch_logdata_double(conn,"src_ip", ipaddr,"event",events)
+            if len(rows) > 0:
+                show_log_table(rows, f"Oversigt over ip historik for {ipaddr} og forbundet med event {events}")
+            else:
+                print("Intet at vise - Prøv med en anden IP-adresse eller event")
         else:
-            print("Intet at vise - Prøv med en anden IP-adresse eller event")
+            print("ingen events findes")
 
     if choice == "2":
         #Udvalg af data til tabel historik udfra brugernavn
@@ -155,8 +161,8 @@ def handle_submenu_4_actions(conn, choice: str):
         data = input("indtast den primære kolonne ")
         data2 = input("indtast kolonne dit søgekriterie kan findes i ")
         parameters = fetch_distinct_from_table(conn, tablename, data2)
-        print("\nher er et udvalg af dine parameter")
-        try:
+        if parameters:
+            print("\nher er et udvalg af dine parameter")
             items = []
             for item in parameters:
                 items.append(item[0])
@@ -165,8 +171,8 @@ def handle_submenu_4_actions(conn, choice: str):
             searchKriteria = input("indtast dit søgekriterie ")
             if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
                 print("piechart lavet i plots")
-        except Error as e:
-            print("et eller andet fucking lige gyldigt")
+        else:
+            print(f"table {tablename} eller {data2} findes ikke")
 
     elif choice == "3":
         console.print("\n[bold cyan]danellse af scatterplot[/]\n")
@@ -177,12 +183,10 @@ def handle_submenu_4_actions(conn, choice: str):
             ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
             parameters = fetch_distinct_from_table(conn, tabelname,ydata)
             print("\nher er et udvalg af dine parameter")
-            try:
-                items = []
-                if parameters:
-                    for item in parameters:
-                        items.append(item[0])
-                    #console_print_list(items)
+            items = []
+            if parameters:
+                for item in parameters:
+                    items.append(item[0])                    #console_print_list(items)
                     magic_print_list(items)
                     parameter = input("indtast dataen du gerne vil se ")
                     if tendenslinje == "ja":
@@ -191,10 +195,8 @@ def handle_submenu_4_actions(conn, choice: str):
                     elif tendenslinje == "nej":
                         if scatterplot(conn,tabelname,xdata,ydata,parameter):
                             print("scatter plot lavet i plots")
-                else:
-                    print("Ingen data i tabel - angivet forkert tabel navn")
-            except Error as e:
-                print("Et etnmvlfdsngds")
+            else:
+                print(f"table {tabelname} eller {ydata} findes ikke")
         else:
             print("det var ikke ja eller nej til tendenslinjer")
 
@@ -204,37 +206,39 @@ def handle_submenu_4_actions(conn, choice: str):
         ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
 
         parameters = fetch_distinct_from_table(conn, tabelname, ydata)
-        if len(parameters) > 0:
+        if parameters:
             print("\nher er et udvalg af dine parameter")
             items = []
             for item in parameters:
                 items.append(item[0])
             #console_print_list(items)
             magic_print_list(items)
+            parameter = input("indtast dataen du gerne vil se ")
+            if barchart(conn, tabelname, xdata, ydata, parameter):
+                print("Barchar lavet i plots")
         else:
-            print("ingen resultater fundet - prøv igen")
+            print(f"table {tabelname} eller {ydata} findes ikke")
 
-        parameter = input("indtast dataen du gerne vil se ")
-        if barchart(conn, tabelname, xdata, ydata, parameter):
-            print("Barchar lavet i plots")
 
     elif choice == "5":
         tabelname = input("indtast hvilket table du vil have data fra ")
         coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
 
         parameters = fetch_distinct_from_table(conn, tabelname, coulum)
-        print("\nher er et udvalg af dine parameter")
-        items = []
-        for item in parameters:
-            items.append(item[0])
-        #console_print_list(items)
-        magic_print_list(items)
+        if parameters:
+            print("\nher er et udvalg af dine parameter")
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            #console_print_list(items)
+            magic_print_list(items)
 
-        value = input("indtast hvilken data der skal laves historik fra ")
-        parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
-        if historyCreater(conn,tabelname,coulum, value, parameter):
-            print("historik er lavet i plots")
-
+            value = input("indtast hvilken data der skal laves historik fra ")
+            parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
+            if historyCreater(conn,tabelname,coulum, value, parameter):
+                print("historik er lavet i plots")
+        else:
+            print(f"table {tabelname} eller {coulum} findes ikke")
 
 
 
