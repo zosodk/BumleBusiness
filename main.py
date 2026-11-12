@@ -126,13 +126,30 @@ def handle_submenu_3_actions(conn, choice: str):
             print("Intet at vise - Prøv med en anden IP-adresse eller event")
 
     if choice == "2":
-        #Udvalg af data til tabel historik udfra brugernavn
-        user = input(f"Indtast den bruger du ønsker historik for: ")
-        rows = fetch_logdata_single(conn,"user", user)
+        #laver udvalg af ip'er
+        parameters = fetch_distinct_from_table(conn, "logdata", "src_ip")
+        print("\nher er et udvalg de mulige ip'er")
+        items = []
+        for item in parameters:
+            items.append(item[0])
+        console_print_list(items)
+
+        ipaddr = input(f"Indtast den ip-adresse du ønsker historik over eventsne: ").strip()
+
+        #laver udvalg af events
+        parameters = fetch_distinct_from_table(conn, "logdata", "event")
+        print("\nher er et udvalg af de mulige events")
+        items = []
+        for item in parameters:
+            items.append(item[0])
+        console_print_list(items)
+
+        levels = input(f"hvilke level vil du gerne have historik over ").strip().upper()
+        rows = fetch_logdata_double(conn,"src_ip", ipaddr,"level",levels)
         if len(rows) > 0:
-            show_log_table(rows, f"Oversigt over bruger historik for {user}")
+            show_log_table(rows, f"Oversigt over ip historik for {ipaddr} og forbundet med level {levels}")
         else:
-            print("Intet at vise - Prøv med et andet brugernavn")
+            print("Intet at vise - Prøv med en anden IP-adresse eller event")
 
 def handle_submenu_4_actions(conn, choice: str):
     """
@@ -183,6 +200,7 @@ def handle_submenu_4_actions(conn, choice: str):
             if tendenslinje == "ja":
                 if scatterplotMedTendensLinje(conn,tabelname,xdata,ydata,parameter):
                     print("scatter plot med tendenslinje i plots")
+
             elif tendenslinje == "nej":
                 if scatterplot(conn,tabelname,xdata,ydata,parameter):
                     print("scatter plot lavet i plots")

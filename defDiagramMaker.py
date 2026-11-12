@@ -134,7 +134,6 @@ def piechartspecefic(conn,tabelname, coulum, titel, coulum2,parameter):
         labels = []
         count = []
         cursor = conn.cursor()
-
         # læser et table og finder hvor mange gange en bestemt ting sker
         cursor.execute(f"""
                     SELECT {coulum}, COUNT(*)
