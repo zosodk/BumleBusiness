@@ -133,12 +133,70 @@ def handle_submenu_3_actions(conn, choice: str):
 
     if choice == "2":
         #Udvalg af data til tabel historik udfra brugernavn
-        user = input(f"Indtast den bruger du ønsker historik for: ")
-        rows = fetch_logdata_single(conn,"user", user)
-        if len(rows) > 0:
-            show_log_table(rows, f"Oversigt over bruger historik for {user}")
+        #laver udvalg af ip'er
+        parameters = fetch_distinct_from_table(conn, "logdata", "src_ip")
+        if parameters:
+            print("\nher er et udvalg de mulige ip'er")
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            console_print_list(items)
+
+            ipaddr = input(f"Indtast den ip-adresse du ønsker historik over level: ").strip()
         else:
-            print("Intet at vise - Prøv med et andet brugernavn")
+            print("ingen ip'er findes")
+
+        #laver udvalg af events
+        parameters = fetch_distinct_from_table(conn, "logdata", "level")
+        if parameters:
+            print("\nher er et udvalg af de mulige levels")
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            console_print_list(items)
+
+            levels = input(f"hvilke levels vil du gerne have historik over ").strip().upper()
+            rows = fetch_logdata_double(conn,"src_ip", ipaddr,"level",levels)
+            if len(rows) > 0:
+                show_log_table(rows, f"Oversigt over ip historik for {ipaddr} og forbundet med level {levels}")
+            else:
+                print("Intet at vise - Prøv med en anden IP-adresse eller level")
+        else:
+            print("ingen events findes")
+
+
+    if choice == "5":
+        #Udvalg af data til tabel historik udfra brugernavn
+        #laver udvalg af ip'er
+        parameters = fetch_distinct_from_table(conn, "logdata", "src_ip")
+        if parameters:
+            print("\nher er et udvalg de mulige ip'er")
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            console_print_list(items)
+
+            ipaddr = input(f"Indtast den ip-adresse du ønsker historik over level: ").strip()
+        else:
+            print("ingen ip'er findes")
+
+        #laver udvalg af events
+        parameters = fetch_distinct_from_table(conn, "logdata", "level")
+        if parameters:
+            print("\nher er et udvalg af de mulige levels")
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            console_print_list(items)
+
+            levels = input(f"hvilke levels vil du gerne have historik over ").strip().upper()
+            rows = fetch_logdata_double(conn,"src_ip", ipaddr,"level",levels)
+            if len(rows) > 0:
+                show_log_table(rows, f"Oversigt over ip historik for {ipaddr} og forbundet med level {levels}")
+            else:
+                print("Intet at vise - Prøv med en anden IP-adresse eller level")
+        else:
+            print("ingen events findes")
 
 def handle_submenu_4_actions(conn, choice: str):
     """
@@ -187,14 +245,14 @@ def handle_submenu_4_actions(conn, choice: str):
             if parameters:
                 for item in parameters:
                     items.append(item[0])                    #console_print_list(items)
-                    magic_print_list(items)
-                    parameter = input("indtast dataen du gerne vil se ")
-                    if tendenslinje == "ja":
-                        if scatterplotMedTendensLinje(conn,tabelname,xdata,ydata,parameter):
-                            print("scatter plot med tendenslinje i plots")
-                    elif tendenslinje == "nej":
-                        if scatterplot(conn,tabelname,xdata,ydata,parameter):
-                            print("scatter plot lavet i plots")
+                magic_print_list(items)
+                parameter = input("indtast dataen du gerne vil se ")
+                if tendenslinje == "ja":
+                    if scatterplotMedTendensLinje(conn,tabelname,xdata,ydata,parameter):
+                        print("scatter plot med tendenslinje i plots")
+                elif tendenslinje == "nej":
+                    if scatterplot(conn,tabelname,xdata,ydata,parameter):
+                        print("scatter plot lavet i plots")
             else:
                 print(f"table {tabelname} eller {ydata} findes ikke")
         else:
