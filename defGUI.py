@@ -7,10 +7,10 @@ from rich.prompt import Prompt
 from rich import box
 
 if os.name == "nt":
-  import ctypes
+    import ctypes
+    kernel32 = ctypes.windll.kernel32
+    kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 
-  kernel32 = ctypes.windll.kernel32
-  kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 os.environ.setdefault("TERM", "xterm-256color")
 os.environ.setdefault("COLORTERM", "truecolor")
 console = Console(force_terminal=True, color_system="truecolor", width=180)
