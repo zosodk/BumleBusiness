@@ -9,8 +9,8 @@ from rich import box
 if os.name == "nt":
   import ctypes
 
-  kernel32 = ctypes.windll.kernel32
-  kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
+kernel32 = ctypes.windll.kernel32
+kernel32.SetConsoleMode(kernel32.GetStdHandle(-11), 7)
 os.environ.setdefault("TERM", "xterm-256color")
 os.environ.setdefault("COLORTERM", "truecolor")
 console = Console(force_terminal=True, color_system="truecolor", width=180)
@@ -113,3 +113,24 @@ def fetch_logdata_double(conn, col1: str, val1: str, col2: str, val2: str):
     query = f"SELECT * FROM logdata WHERE {col1} = ? AND {col2} = ?"
     cursor.execute(query, (val1, val2))
     return cursor.fetchall()
+
+def console_print_list(items: list, title: str = "Udvidet søgning"):
+    console = Console()
+
+    table = Table(
+        title=f"[bold cyan]{title}[/]",
+        box=box.DOUBLE_EDGE,
+        header_style="bold cyan",
+        width=180
+    )
+
+    table.add_column("Resultat 1", justify="center")
+    table.add_column("Resultat 2", justify="center")
+    table.add_column("Resultat 3", justify="center")
+
+    for i in range(0, len(items), 3):
+        row = items[i:i + 3]
+
+        table.add_row(*[str(item) for item in row])
+
+    console.print(table)
