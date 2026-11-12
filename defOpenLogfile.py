@@ -29,27 +29,36 @@ def parse_logfile_data(path):
 
 
 def has_timestamps(logfile):
-    try:
-        from datetime import datetime
-        count = 0
 
-        while count < len(logfile):
-            for line in logfile:
-                try:
-                    datetime.fromisoformat(line[:19])
-                except:
-                    print('No timestamp found!')
-                    break
-                else:
-                    count += 1
+    # Hvis log-filen ikke er en liste, så alarmer brugeren om at vi forventer en liste
+    if not isinstance(logfile, list):
+        raise TypeError("Expected a list.")
 
-        if count == len(logfile):
-            return True
-        else:
+    # Vi skal også tjekke om hver log er en string
+    if not all(isinstance(log, str) for log in logfile):
+        raise TypeError("All logs in the list must be strings.")
+
+    from datetime import datetime
+    import shlex
+
+    for line in logfile:
+
+        tokens = shlex.split(line)
+
+        if not tokens:
             return False
 
-    except NameError:
-        print("a")
+        try:
+            datetime.fromisoformat(tokens[0])
+
+        # Vi kan tjekke for ValueError og IndexError
+        except ValueError:
+            return "Methods calls do not fit value type."
+
+        except IndexError:
+            return "Token can not be indexed."
+
+    return True
 
 def has_expected_content(logfile, list_of_expected_content):
 
