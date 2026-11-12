@@ -1,8 +1,7 @@
 from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata,fetch_distinct_from_table
 from defFileHandler import openLogfile, parse_logline
 from defInit import init_db
-from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, \
-    fetch_logdata_double, console_print_list
+from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, fetch_logdata_double, magic_print_list
 from defDiagramMaker import *
 
 
@@ -77,8 +76,8 @@ def handle_submenu_2_actions(conn, choice: str):
     if choice == "1":
         #Udvalg af data til tabel historik udfra ipadresse
         print(f"Der er følgende ipadresser at vælge imellem i databasen: ")
-        #print(fetch_distinct_from_table(conn, "logdata", "src_ip"))
-
+        result = fetch_distinct_from_table(conn, "logdata", "src_ip")
+        magic_print_list(result)
         ipaddr = input(f"Indtast den ip-adresse du ønsker historik for: ")
 
         rows = fetch_logdata_single(conn,"src_ip", ipaddr)
