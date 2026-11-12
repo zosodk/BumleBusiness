@@ -88,7 +88,8 @@ def handle_submenu_2_actions(conn, choice: str):
     if choice == "2":
         #Udvalg af data til tabel historik udfra brugernavn
         print(f"Der er følgende bruger i databasen: ")
-        #print(fetch_distinct_from_table(conn, "logdata", "user"))
+        result = fetch_distinct_from_table(conn, "logdata", "user")
+        magic_print_list(result)
 
         user = input(f"Indtast den bruger du ønsker historik for: ")
 
@@ -97,6 +98,48 @@ def handle_submenu_2_actions(conn, choice: str):
             show_log_table(rows, f"Oversigt over bruger historik for {user}")
         else:
             print("Intet at vise - Prøv med et andet brugernavn")
+
+    if choice == "3":
+        #Udvalg af data til tabel historik udfra brugernavn
+        print(f"Der er følgende event typer i databasen: ")
+        result = fetch_distinct_from_table(conn, "logdata", "event")
+        magic_print_list(result)
+
+        event = input(f"Indtast den event du ønsker historik for: ")
+
+        rows = fetch_logdata_single(conn,"event", event)
+        if len(rows) > 0:
+            show_log_table(rows, f"Oversigt over event historik for {event}")
+        else:
+            print("Intet at vise - Prøv med et andet Eventid")
+
+    if choice == "4":
+        #Udvalg af data til tabel historik udfra brugernavn
+        print(f"Der er følgende level typer i databasen: ")
+        result = fetch_distinct_from_table(conn, "logdata", "level")
+        magic_print_list(result)
+
+        level = input(f"Indtast den level du ønsker historik for: ")
+
+        rows = fetch_logdata_single(conn,"level", level)
+        if len(rows) > 0:
+            show_log_table(rows, f"Oversigt over level historik for {level}")
+        else:
+            print("Intet at vise - Prøv med en anden Level type")
+
+    if choice == "5":
+        # Udvalg af data til tabel historik udfra brugernavn
+        print(f"Der er følgende status typer i databasen: ")
+        result = fetch_distinct_from_table(conn, "logdata", "status")
+        magic_print_list(result)
+
+        status = input(f"Indtast den status type du ønsker historik for: ")
+
+        rows = fetch_logdata_single(conn, "status", status)
+        if len(rows) > 0:
+            show_log_table(rows, f"Oversigt over level historik for {status}")
+        else:
+            print("Intet at vise - Prøv med en anden status type")
 
 def handle_submenu_3_actions(conn, choice: str):
     if choice == "1":
