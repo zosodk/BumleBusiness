@@ -248,13 +248,11 @@ def handle_submenu_4_actions(conn, choice: str):
     :param choice: choice
     """
     if choice == "1":
-        console.print("\n[bold cyan]dannelse af piechart[/]\n")
-        tablename = input("hvilket table vil du have data fra ")
-        data = input("hvilken kolonne skal der laves piechart på ")
+        console.print("\n[bold cyan]Dannelse af piechart[/]\n")
+        tablename = "logdata"
+        data = input("Hvilken kolonne skal der laves piechart på (fx: level, event, src_ip, timestamp, user, status: ")
         if piechart(conn, tablename, data, data):
-            console.print("\n[bold cyan]piechart er lavet i plots[/]\n")
-
-
+            console.print("\n[bold cyan]Piechart dannet i andet vindue[/]\n")
 
     elif choice == "2":
         console.print("\n[bold cyan]dannelse af specefic piechart[/]\n")

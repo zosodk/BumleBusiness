@@ -18,6 +18,7 @@ console = Console(force_terminal=True, color_system="truecolor", width=180)
 
 def clear_screen():
     os.system("cls" if os.name == "nt" else "clear")
+    console.clear()
 
 
 def draw_dos_box(title: str, subtitle: str, menu_items: list[tuple[str, str, str]], border_color: str = "bright_cyan"):
