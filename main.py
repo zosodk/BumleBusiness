@@ -1,4 +1,4 @@
-from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata,fetch_distinct_from_table
+from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata,fetch_distinct_from_table, fetch_all_from_table, fetch_coloumns_table
 from defFileHandler import open_logfile, parse_logfile_data
 from defInit import init_db
 from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, fetch_logdata_double, magic_print_list, console_print_list
@@ -273,28 +273,38 @@ def handle_submenu_4_actions(conn, choice: str):
     :param choice: choice
     """
     if choice == "1":
-        console.print("\n[bold cyan]Dannelse af piechart[/]\n")
+        console.print("\n[bold cyan]Dannelse af Piechart[/]\n")
         tablename = "logdata"
+        print(f"Der er følgende kolonner i {tablename} i databasen: ")
+        result = fetch_coloumns_table(conn, tablename)
+        #print(result)
+        magic_print_list(result)
         data = input("Hvilken kolonne skal der laves piechart på (fx: level, event, src_ip, timestamp, user, status: ")
         if piechart(conn, tablename, data, data):
             console.print("\n[bold cyan]Piechart dannet i andet vindue[/]\n")
 
     elif choice == "2":
-        console.print("\n[bold cyan]dannelse af specefic piechart[/]\n")
-        tablename = input("hvilket table vil du have data fra ")
-        data = input("indtast den primære kolonne ")
-        data2 = input("indtast kolonne dit søgekriterie kan findes i ")
+        console.print("\n[bold cyan]Dannelse af en specefik Piechart[/]\n")
+        #tablename = input("hvilket table vil du have data fra ")
+        tablename = "logdata"
+        print(f"Der er følgende kolonner i {tablename} i databasen: ")
+        result = fetch_coloumns_table(conn, tablename)
+        #print(result)
+        magic_print_list(result)
+        data = input("Indtast den primære kolonne (se ovenstående liste): ")
+        magic_print_list(result)
+        data2 = input("Indtast kolonne, hvor dit søgekriterie kan findes i: ")
         parameters = fetch_distinct_from_table(conn, tablename, data2)
         if parameters:
-            print("\nher er et udvalg af dine parameter")
+            print("\nHer er et udvalg af dine mulige parametre: ")
             items = []
             for item in parameters:
                 items.append(item[0])
             #console_print_list(items)
             magic_print_list(items)
-            searchKriteria = input("indtast dit søgekriterie ")
+            searchKriteria = input("Indtast et af ovenstående søgekriterier: ")
             if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
-                print("piechart lavet i plots")
+                print("Piechart lavet i andet vindue ")
         else:
             print(f"table {tablename} eller {data2} findes ikke")
 

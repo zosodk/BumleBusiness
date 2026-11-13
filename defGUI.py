@@ -147,7 +147,7 @@ def console_print_list(items: list, title: str = "Udvidet søgning"):
 
     console.print(panel)
 
-def magic_print_list(items: list, title: str = "Simpel søgning"):
+def magic_print_list(items: list, title: str = "Opslag i database: "):
 
 
     try:
