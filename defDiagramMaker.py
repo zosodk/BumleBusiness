@@ -1,4 +1,5 @@
 from defDbHandler import connect_to_db
+from datetime import datetime
 import numpy as np
 import sqlite3
 from sqlite3 import Error
@@ -76,7 +77,7 @@ def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter):
             GROUP BY {xdata}
         """, (parameter,))
         data = cursor.fetchall()
-        print(data)
+        #print(data)
         for tuple in data:
             xakse.append(tuple[0])
             yakse.append(tuple[1])
@@ -271,6 +272,63 @@ def historyCreater(conn,tabelname, coulum, valueInCoulum, parameter):
             return True
     except Error as e:
         print(f"historik failed: {e}")
+
+def plot_ip_activity(conn, target_ip):
+  """Henter logdata for en specifik IP-adresse fra SQLite"""
+
+  cursor = conn.cursor()
+#fjernet pandas fra scatterplit eksemplet
+  # Hent kun de relevante kolonner (timestamp og event) for den specifikke IP
+  query = 'SELECT timestamp, event FROM logdata WHERE src_ip = ?'
+  cursor.execute(query, (target_ip,))
+  rows = cursor.fetchall()
+  if not rows:
+    print(f'Ingen data fundet for IP-adresse: {target_ip}')
+    return
+
+  timestamps = []
+  events = []
+#jeg er nød til at omdanne timestampet i db til et ægte timestamp format - ellers fucker visningen op
+  for row in rows:
+    ts_str, event_val = row
+    try:
+      # Forsøger standard ISO/SQL-format
+      dt = datetime.fromisoformat(ts_str)
+    except ValueError:
+      # Fallback til typisk SQL-tidsformat ('YYYY-MM-DD HH:MM:SS')
+      dt = datetime.strptime(ts_str, '%Y-%m-%d %H:%M:%S')
+
+    timestamps.append(dt)
+    events.append(event_val)
+
+  # scatterplot
+  plt.figure(figsize=(12, 6))
+
+  # plotter tidspunkt (x-akse) mod event (y-akse)
+  plt.scatter(
+      timestamps,
+      events,
+      alpha=0.7,
+      edgecolors='k',
+      s=50,
+      color='royalblue',
+  )
+
+  plt.title(
+      f'Aktivitet for IP: {target_ip} (Udtrukket fra database)', fontsize=14
+  )
+  #tager fra vores scatterplot eksempel
+  plt.xlabel('Tidspunkt', fontsize=12)
+  plt.ylabel('Event / Værdi', fontsize=12)
+
+  # Gør datoerne på X-aksen læsevenlige
+  plt.gcf().autofmt_xdate()
+
+  plt.grid(True, linestyle='--', alpha=0.5)
+  plt.tight_layout()
+
+  # Vis plottet
+  plt.show()
 
 if __name__ == "__main__":
     connection = connect_to_db()

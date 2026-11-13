@@ -138,6 +138,18 @@ def fetch_distinct_from_table(conn, tablename, parameter):
     except Error as e:
         print(f"fejl under udtræk af tabel - forkert angivet navn på tabel: {e}")
 
+def fetch_coloumns_table(conn, tablename):
+    """
+    Henter kolonnenavne fra en tabel
+    """
+    try:
+        cursor = conn.cursor()
+        cursor.execute(f"SELECT name FROM PRAGMA_TABLE_INFO('{tablename}')")
+        return cursor.fetchall()
+    except Error as e:
+        print(f"fejl under udtræk af navne - forkert angivet navn på tabel: {e}")
+
+
 if __name__ == "__main__":
     #Test af funktionalitet
     connection = connect_to_db()
@@ -150,5 +162,5 @@ if __name__ == "__main__":
    # create_main_tables(connection, "logdata")
     #insert_logdata(connection, "logdata", {'timestamp': '2026-03-02T08:06:21', 'level': 'ALERT', 'event': 'MALWARE_SIGNATURE_MATCH', 'user': 'svc_backup', 'src_ip': '198.51.100.200', 'dest_host': 'mail01', 'dest_port': '445', 'status': 'BLOCKED', 'msg': 'Known malware signature matched'})
     #Vær ops på, at når data udtrækkes, da kommer foreign key lige efter primary key i submenu
-    tabel = fetch_all_from_table(connection, "logdata")
+    tabel = fetch_coloumns_table(connection, "logdata")
     print(tabel)
