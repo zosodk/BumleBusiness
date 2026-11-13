@@ -289,7 +289,6 @@ def handle_submenu_4_actions(conn, choice: str):
         tablename = "logdata"
         print(f"Der er følgende kolonner i {tablename} i databasen: ")
         result = fetch_coloumns_table(conn, tablename)
-        #print(result)
         magic_print_list(result)
         data = input("Indtast den primære kolonne (se ovenstående liste): ")
         magic_print_list(result)
@@ -309,37 +308,55 @@ def handle_submenu_4_actions(conn, choice: str):
             print(f"table {tablename} eller {data2} findes ikke")
 
     elif choice == "3":
-        console.print("\n[bold cyan]danellse af scatterplot[/]\n")
-        tendenslinje = input("vil du gerne have en tendenslinje ja/nej").lower().strip(" ")
+        console.print("\n[bold cyan]Dannelse af scatterplot[/]\n")
+        tendenslinje = input("Vil du have en tendenslinje i punktdiagrammen? (ja/nej): ").lower().strip(" ")
         if tendenslinje == "ja" or tendenslinje == "nej":
-            tabelname = input("Indtast hvilket table du vil have data fra ")
-            xdata = input("Indtast hvilken kolonne du gerne vil have ad x aksen ")
-            ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
-            parameters = fetch_distinct_from_table(conn, tabelname,ydata)
-            print("\nher er et udvalg af dine parameter")
+            #tabelname = input("Indtast hvilket table du vil have data fra ")
+            tablename = "logdata"
+            print(f"Der er følgende kolonner i {tablename} i databasen: ")
+            result = fetch_coloumns_table(conn, tablename)
+            magic_print_list(result)
+            xdata = input("Indtast hvilken kolonne du ønsker på x aksen:  ")
+            ydata = input("Indtast hvilken kolonne du ønsker at trække data ud fra: ")
+            parameters = fetch_distinct_from_table(conn, tablename,ydata)
+            print("\nHer er et udvalg af dine mulige parametre: ")
             items = []
             if parameters:
                 for item in parameters:
                     items.append(item[0])                    #console_print_list(items)
                 magic_print_list(items)
-                parameter = input("indtast dataen du gerne vil se ")
+                parameter = input("Indtast den parameter du ønsker at se: ")
                 if tendenslinje == "ja":
-                    if scatterplotMedTendensLinje(conn,tabelname,xdata,ydata,parameter):
-                        print("scatter plot med tendenslinje i plots")
+                    if scatterplotMedTendensLinje(conn,tablename,xdata,ydata,parameter):
+                        print("Scatterplot med tendenslinje nyt vindue: ")
                 elif tendenslinje == "nej":
-                    if scatterplot(conn,tabelname,xdata,ydata,parameter):
-                        print("scatter plot lavet i plots")
+                    if scatterplot(conn,tablename,xdata,ydata,parameter):
+                        print("Scatterplot uden tendenslinje nyt vindue: ")
             else:
-                print(f"table {tabelname} eller {ydata} findes ikke")
+                print(f"Tabel {tablename} eller {ydata} findes ikke - muligvis tastefejl")
         else:
             print("det var ikke ja eller nej til tendenslinjer")
 
     elif choice == "4":
-        tabelname = input("Indtast hvilket table du vil have data fra ")
+        tablename = "logdata"
+        parameters = fetch_distinct_from_table(conn, tablename, "src_ip")
+        if parameters:
+            print("\nHer er et udvalg af dine mulige IP-adresser: ")
+            items = []
+            for item in parameters:
+                items.append(item[0])
+            # console_print_list(items)
+            magic_print_list(items)
+        ipaddr = input("Indtast hvilken IP-adresse du ønsker at se Events over tid for: ")
+        if ipaddr != "":
+            plot_ip_activity(conn, ipaddr)
+
+    elif choice == "5":
+        tablename = input("Indtast hvilket table du vil have data fra ")
         xdata = input("Indtast hvilken kolonne du gerne vil have ad x aksen ")
         ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
 
-        parameters = fetch_distinct_from_table(conn, tabelname, ydata)
+        parameters = fetch_distinct_from_table(conn, tablename, ydata)
         if parameters:
             print("\nher er et udvalg af dine parameter")
             items = []
@@ -348,17 +365,17 @@ def handle_submenu_4_actions(conn, choice: str):
             #console_print_list(items)
             magic_print_list(items)
             parameter = input("indtast dataen du gerne vil se ")
-            if barchart(conn, tabelname, xdata, ydata, parameter):
+            if barchart(conn, tablename, xdata, ydata, parameter):
                 print("Barchar lavet i plots")
         else:
-            print(f"table {tabelname} eller {ydata} findes ikke")
+            print(f"table {tablename} eller {ydata} findes ikke")
 
 
-    elif choice == "5":
-        tabelname = input("indtast hvilket table du vil have data fra ")
+    elif choice == "6":
+        tablename = input("indtast hvilket table du vil have data fra ")
         coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
 
-        parameters = fetch_distinct_from_table(conn, tabelname, coulum)
+        parameters = fetch_distinct_from_table(conn, tablename, coulum)
         if parameters:
             print("\nher er et udvalg af dine parameter")
             items = []
@@ -369,10 +386,10 @@ def handle_submenu_4_actions(conn, choice: str):
 
             value = input("indtast hvilken data der skal laves historik fra ")
             parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
-            if historyCreater(conn,tabelname,coulum, value, parameter):
+            if historyCreater(conn,tablename,coulum, value, parameter):
                 print("historik er lavet i plots")
         else:
-            print(f"table {tabelname} eller {coulum} findes ikke")
+            print(f"table {tablename} eller {coulum} findes ikke")
 
 
 
