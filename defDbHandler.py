@@ -5,6 +5,7 @@ def connect_to_db(db_name="bumlebusiness.db"):
     """
     Opretter og returnerer en forbindelse til SQLite databasen.
     returnerer en forbindelse til SQLite databasen, eller en fejl, hvis det ikke er muligt.
+    :param db_name
     """
     try:
         # opretter forbindelsen
@@ -67,6 +68,12 @@ def create_main_tables(conn, tablename):
 def insert_menu_item(conn, tablename, nr, menuitem, description, parentnr=1):
     """
     Indsætter et nyt menupunkt i tabel. - kan bruges til både hoved og undermenu, da hovedmenu ikke bruger parentnr til noget - så denne ignoreres
+    :param conn
+    :param tablename
+    :param nr
+    :param menuitem
+    :param description
+    :param parentnr
     """
     cursor = conn.cursor()
     if tablename == "mainmenu":
@@ -123,6 +130,8 @@ def tabel_cleaner(conn, tablename):
 def fetch_all_from_table(conn, tablename):
     """
     Henter alt fra en angivet tabel returner indhold
+    :param conn
+    :param tablename
     """
     cursor = conn.cursor()
     cursor.execute(f"SELECT * FROM {tablename}")
@@ -130,6 +139,9 @@ def fetch_all_from_table(conn, tablename):
 def fetch_distinct_from_table(conn, tablename, parameter):
     """
     Henter specefic data fra et table
+    :param conn
+    :param tablename
+    :param parameter
     """
     try:
         cursor = conn.cursor()
@@ -141,6 +153,8 @@ def fetch_distinct_from_table(conn, tablename, parameter):
 def fetch_coloumns_table(conn, tablename):
     """
     Henter kolonnenavne fra en tabel
+    :param tablename
+    :param conn
     """
     try:
         cursor = conn.cursor()

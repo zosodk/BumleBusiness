@@ -6,6 +6,11 @@ from defDiagramMaker import *
 
 
 def sorterings_vaerdi(item):
+    """
+    laver en sotering så værdi nul smides aller bagerst i konsollen
+    :param item:
+    :return:
+    """
     foerste_element = item[0]
 
     if foerste_element == "0":
@@ -98,6 +103,12 @@ def handle_submenu_1_actions(conn, choice: str):
             console.print("\n[bold green]✔ Alt eksisterende logindhold i databasen er nu slettet![/]")
 
 def handle_submenu_2_actions(conn, choice: str):
+    """
+    håndtere hvad der sker når der skrives 2 på skærmen
+    :param conn:
+    :param choice:
+    :return:
+    """
     if choice == "1":
         #Udvalg af data til tabel historik udfra ipadresse
         print(f"Der er følgende ipadresser at vælge imellem i databasen: ")
@@ -167,6 +178,12 @@ def handle_submenu_2_actions(conn, choice: str):
             print("Intet at vise - Prøv med en anden status type")
 
 def handle_submenu_3_actions(conn, choice: str):
+    """
+    håndtere hvad der sker når der skrives 3 på skærmen
+    :param conn:
+    :param choice:
+    :return:
+    """
     if choice == "1":
         #laver udvalg af ip'er
         parameters = fetch_distinct_from_table(conn, "logdata", "src_ip")
@@ -268,7 +285,7 @@ def handle_submenu_3_actions(conn, choice: str):
 
 def handle_submenu_4_actions(conn, choice: str):
     """
-    Styrer hvad der sker når der tastes på skærmen/konsollen
+    Styrer hvad der sker når der tastes 4 på skærmen/konsollen
     :param conn: database connection
     :param choice: choice
     """
@@ -445,6 +462,10 @@ def run_dynamic_submenu(conn, parent_nr: int, parent_title: str):
 
 
 def main_menu():
+    """
+    dette køre mainmenuen
+    :return:
+    """
     init_db()
     conn = connect_to_db("bumlebusiness.db")
 

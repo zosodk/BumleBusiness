@@ -105,6 +105,14 @@ def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter):
         return False
 
 def piechart(conn,tabelname, coulum, titel):
+    """
+    denne funktion laver et piechart over hvormange gange hver element opstår på en kolonne
+    :param conn:
+    :param tabelname:
+    :param coulum:
+    :param titel:
+    :return: bool
+    """
     try:
         labels = []
         count = []
@@ -131,6 +139,16 @@ def piechart(conn,tabelname, coulum, titel):
         return False
 
 def piechartspecefic(conn,tabelname, coulum, titel, coulum2,parameter):
+    """
+    denne funktion danner et piechart der viser hvormange gange en parameter opstår i en anden kolonne
+    :param conn:
+    :param tabelname:
+    :param coulum:
+    :param titel:
+    :param coulum2:
+    :param parameter:
+    :return: bool
+    """
     try:
         labels = []
         count = []
@@ -205,6 +223,15 @@ def barchart(conn,tabelname, xdata, ydata, parameter):
         return False
 
 def historyCreater(conn,tabelname, coulum, valueInCoulum, parameter):
+    """
+    laver en historik over en bestemt value i en kolonne
+    :param conn:
+    :param tabelname:
+    :param coulum:
+    :param valueInCoulum:
+    :param parameter:
+    :return: bool
+    """
     try:
         cur = conn.cursor()
         timestamp = []
