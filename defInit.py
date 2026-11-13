@@ -1,6 +1,4 @@
 from defDbHandler import *
-from sqlite3 import Error
-from defFileHandler import parse_logline
 
 #DENNE SKAL ÆNDRES VED OVERGANG TIL GUI OG TEST AF DETTE
 createlogdata = False
@@ -54,20 +52,7 @@ def init_db():
         conn.commit()
         break
 
-
-def testdata():
-    if createlogdata:
-        conn = connect_to_db("bumlebusiness.db")
-        tabel_cleaner(conn, "logdata")
-        conn.commit()
-        with open("cyber_security_log_sample.txt", "r", encoding="utf-8") as fil:
-            for linie in fil:
-                parsedline = parse_logline(linie)
-                insert_logdata(conn, "logdata", parsedline)
-
-
 if __name__ == "__main__":
     init_db()
-    testdata()
 
 
