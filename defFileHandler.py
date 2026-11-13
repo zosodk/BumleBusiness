@@ -29,8 +29,8 @@ def openLogfile(filename):
             loglinie = parse_logline(linie)
             print(loglinie)
 
-if __name__ == '__main__':
-    openLogfile("cyber_security_log_sample.txt")
+# if __name__ == '__main__':
+#    openLogfile("cyber_security_log_sample.txt")
 
 def parse_logfile_data(path):
     try:

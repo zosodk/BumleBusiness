@@ -1,5 +1,5 @@
 from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata,fetch_distinct_from_table
-from defFileHandler import openLogfile, parse_logline, parse_logfile_data
+from defFileHandler import openLogfile, parse_logline, open_logfile, parse_logfile_data
 from defInit import init_db
 from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, fetch_logdata_double, magic_print_list, console_print_list
 from defDiagramMaker import *
@@ -48,7 +48,11 @@ def handle_submenu_1_actions(conn, choice: str):
     """
     if choice == "1":
         console.print("\n[bold cyan]Indlæser og udskriver rå logfil (cyber_security_log_sample.txt)...[/]\n")
-        openLogfile("cyber_security_log_sample.txt")
+
+        # Open the logfile and print the raw data onto the console
+        logs = open_logfile("cyber_security_log_sample.txt")
+        print(logs)
+
         console.print("\n[bold green]✔ Rå logfil udlæst til skærmen![/]")
 
     elif choice == "2":
