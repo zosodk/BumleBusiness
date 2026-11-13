@@ -199,7 +199,7 @@ def handle_submenu_3_actions(conn, choice: str):
         else:
             print("ingen events findes")
 
-    if choice == "2":
+    elif choice == "2":
         #Udvalg af data til tabel historik udfra brugernavn
         #laver udvalg af ip'er
         parameters = fetch_distinct_from_table(conn, "logdata", "src_ip")
@@ -221,7 +221,8 @@ def handle_submenu_3_actions(conn, choice: str):
             items = []
             for item in parameters:
                 items.append(item[0])
-            console_print_list(items)
+            #console_print_list(items)
+            magic_print_list(items)
 
             levels = input(f"hvilke levels vil du gerne have historik over ").strip().upper()
             rows = fetch_logdata_double(conn,"src_ip", ipaddr,"level",levels)
@@ -232,8 +233,21 @@ def handle_submenu_3_actions(conn, choice: str):
         else:
             print("ingen events findes")
 
+    elif choice == "3":
+        rows = fetch_logdata_double(conn, "level","WARN", "event", "LOGIN_FAILED")
+        if len(rows) > 0:
+            show_log_table(rows, f"Oversigt over level historik for WARN og forbundet med event LOGIN_FAILED")
+        else:
+            print("Intet at vises tjek om database er indlæst")
 
-    if choice == "5":
+    elif choice == "4":
+        rows = fetch_logdata_single(conn, "level", "ALERT")
+        if len(rows) > 0:
+            show_log_table(rows, f"Oversigt over level historik for ALERT")
+        else:
+            print("Intet at vises tjek om database er indlæst")
+
+    elif choice == "5":
         #Udvalg af data til tabel historik udfra brugernavn
         #laver udvalg af ip'er
         parameters = fetch_distinct_from_table(conn, "logdata", "src_ip")
@@ -242,27 +256,29 @@ def handle_submenu_3_actions(conn, choice: str):
             items = []
             for item in parameters:
                 items.append(item[0])
-            console_print_list(items)
+            #console_print_list(items)
+            magic_print_list(items)
 
             ipaddr = input(f"Indtast den ip-adresse du ønsker historik over level: ").strip()
         else:
             print("ingen ip'er findes")
 
-        #laver udvalg af events
-        parameters = fetch_distinct_from_table(conn, "logdata", "level")
+        #laver udvalg af user
+        parameters = fetch_distinct_from_table(conn, "logdata", "event")
         if parameters:
-            print("\nher er et udvalg af de mulige levels")
+            print("\nher er et udvalg af de mulige events")
             items = []
             for item in parameters:
                 items.append(item[0])
-            console_print_list(items)
+            #console_print_list(items)
+            magic_print_list(items)
 
-            levels = input(f"hvilke levels vil du gerne have historik over ").strip().upper()
-            rows = fetch_logdata_double(conn,"src_ip", ipaddr,"level",levels)
+            events = input(f"hvilke levels vil du gerne have historik over ").strip().upper()
+            rows = fetch_logdata_double(conn,"src_ip", ipaddr,"level",events)
             if len(rows) > 0:
-                show_log_table(rows, f"Oversigt over ip historik for {ipaddr} og forbundet med level {levels}")
+                show_log_table(rows, f"Oversigt over ip historik for {ipaddr} og forbundet med level {events}")
             else:
-                print("Intet at vise - Prøv med en anden IP-adresse eller level")
+                print("Intet at vise - Prøv med en anden IP-adresse eller event")
         else:
             print("ingen events findes")
 
