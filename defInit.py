@@ -45,8 +45,9 @@ def init_db():
         insert_menu_item(conn, "submenu", 1, "Vis Piechart udfra en kolonne","Piechart over en kolonne af data", 4)
         insert_menu_item(conn, "submenu", 2, "Vis specifik Piechart", "Opretter piechart, der viser fordelingen af hændelser udfra parametre og kolonner.", 4)
         insert_menu_item(conn, "submenu", 3, "Vis Scatterplot diagram med eller uden tendenslinie","Giver mulighed for udvælgelse af akseværdier", 4)
-        insert_menu_item(conn, "submenu", 4, "Vis Søjlediagrammer", "Giver mulighed for dannelse af søjediagrammer udfra valgte værdier", 4)
-        insert_menu_item(conn, "submenu", 5, "Vis historikdiagram", "Viser historisk sammenhæng udfra valgte parametre", 4)
+        insert_menu_item(conn, "submenu", 4, "Vis Scatterplot udfra ip, tid og events","Viser adfærd for en specifik ip", 4)
+        insert_menu_item(conn, "submenu", 5, "Vis Søjlediagrammer", "Giver mulighed for dannelse af søjediagrammer udfra valgte værdier", 4)
+        insert_menu_item(conn, "submenu", 6, "Vis historikdiagram", "Viser historisk sammenhæng udfra valgte parametre", 4)
         insert_menu_item(conn, "submenu", 0, "Tilbage til hovedmenu", "Returnerer til hovedmenuen", 4)
 
         conn.commit()
