@@ -1,5 +1,5 @@
 from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata,fetch_distinct_from_table
-from defFileHandler import openLogfile, parse_logline
+from defFileHandler import open_logfile, parse_logfile_data
 from defInit import init_db
 from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, fetch_logdata_double, magic_print_list, console_print_list
 from defDiagramMaker import *
@@ -48,24 +48,49 @@ def handle_submenu_1_actions(conn, choice: str):
     """
     if choice == "1":
         console.print("\n[bold cyan]Indlæser og udskriver rå logfil (cyber_security_log_sample.txt)...[/]\n")
-        openLogfile("cyber_security_log_sample.txt")
+
+        # Open the logfile and print the raw data onto the console
+        logs = open_logfile("cyber_security_log_sample.txt")
+        print(logs)
+
         console.print("\n[bold green]✔ Rå logfil udlæst til skærmen![/]")
 
     elif choice == "2":
-        count = 0
-        with open("cyber_security_log_sample.txt", "r", encoding="utf-8") as fil:
-            for linie in fil:
-                if linie.strip():
-                    parsed = parse_logline(linie)
-                    insert_logdata(conn, "logdata", parsed)
-                    count += 1
-        conn.commit()
-        console.print(f"\n[bold green]✔ {count} loglinjer er parset og indsat i SQLite-databasen![/]")
+
+        # Vi skal undersøge om databasen er tom.
+        # Start med at indlæse databasen.
+        logs_in_db = fetch_all_from_table(conn, "logdata")
+
+        # Nu hvor vi har hentet indhold fra databasen, lad os tjekke om tabellen indeholder data eller om den ertom
+
+        # Hvis tabellen er tom, så indlæser vi data fra logfilen
+        if len(logs_in_db) == 0:
+            print("\nTable is empty. Insert data into database...")
+
+            # Indlæs data fra
+            logs = parse_logfile_data("cyber_security_log_sample.txt")
+            count = 0
+
+            for log in logs:
+                insert_logdata(conn, "logdata", log)
+                count += 1
+
+            # Gem ændringer foretaget i tabellen
+            conn.commit()
+
+            console.print(f"\n[bold green]✔ {count} loglinjer er parset og indsat i SQLite-databasen![/]")
+
+
+        # Hvis tabellen ikke er tom, så oplyser vi brugeren herom
+        elif len(logs_in_db) > 1:
+            print("\nData has already been inserted into the database. We do nothing.")
 
     elif choice == "3":
         rows = fetch_all_from_table(conn, "logdata")
         if rows:
             show_log_table(rows[:], title=f"Visningstabel: Logdata ({len(rows)} rækker total)")
+        else:
+            print("\nTable is empty. Insert data into database...")
 
     elif choice == "4":
         if tabel_cleaner(conn, "logdata"):
