@@ -1,5 +1,5 @@
 from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata,fetch_distinct_from_table
-from defFileHandler import openLogfile, parse_logline, open_logfile, parse_logfile_data
+from defFileHandler import open_logfile, parse_logfile_data
 from defInit import init_db
 from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, fetch_logdata_double, magic_print_list, console_print_list
 from defDiagramMaker import *
@@ -78,8 +78,6 @@ def handle_submenu_1_actions(conn, choice: str):
             # Gem ændringer foretaget i tabellen
             conn.commit()
 
-            # Luk forbindelsen til databsen og udskriv info til brugeren via konsollen
-            conn.close()
             console.print(f"\n[bold green]✔ {count} loglinjer er parset og indsat i SQLite-databasen![/]")
 
 
@@ -91,6 +89,8 @@ def handle_submenu_1_actions(conn, choice: str):
         rows = fetch_all_from_table(conn, "logdata")
         if rows:
             show_log_table(rows[:], title=f"Visningstabel: Logdata ({len(rows)} rækker total)")
+        else:
+            print("\nTable is empty. Insert data into database...")
 
     elif choice == "4":
         if tabel_cleaner(conn, "logdata"):
