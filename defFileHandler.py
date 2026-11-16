@@ -1,4 +1,24 @@
 def parse_logfile_data(path):
+    """
+    Beskrivelse af funktionen:
+
+        Funktionen starter med at åbne en log-fil af ved at kalde funktionen open_logfile().
+        Forudsat at dette går som forventet, omformes data udlæst fra log-filen til en liste af strings.
+
+        Nu hvor vi er så langt, er vi klar til at tjekke om alle elementer (strings) i vores liste indeholder et
+        timestamp. Derefter omformer vi vores liste med strings til en liste bestående af dictionaries. Hver dictionary
+        indeholder de samme data som vores strenge indeholdt.
+
+        Begge disse funktioner returnerer 'true' såfremt vores lister indeholder hvad vi forventer.
+        Såfremt begge funktioner returnerer 'true', returnerer funktionen vores liste med dictionaries.
+
+    Args:
+        path (str): relativ path til log-filen på brugerens system
+
+    Returns:
+        list: liste af dictionaries som indeholder data fra den originale log-fil
+    """
+
     try:
         # åben filen
         logfile = open_logfile(path)
@@ -29,6 +49,17 @@ def parse_logfile_data(path):
 
 
 def has_timestamps(logfile):
+    """
+    Beskrivelse af funktionen:
+        Funktionen tjekker om hver linje streng i listen logfile indeholder et timestamp.
+
+    Args:
+        logfile (list): liste af strenge
+
+    Returns:
+        bool: returnerer true hvis alle strenge i listen indeholder et timestamp
+        ellers returneres en fejlmeddelelse eller false.
+    """
 
     # Hvis log-filen ikke er en liste, så alarmer brugeren om at vi forventer en liste
     if not isinstance(logfile, list):
@@ -62,6 +93,23 @@ def has_timestamps(logfile):
 
 def has_expected_content(logfile, list_of_expected_content):
 
+    """
+    Beskrivelse af funktionen:
+
+        Opgaven gennemgår en liste af dictionaries og sammenholder keys i hver dictionary med indholdet i
+        list_of_expected_content. Hvis alt går godt får vi 'true' retur. Ellers får vi en fejlmeddelelse.
+
+    Args:
+        logfile (list): liste med dictionaries
+        list_of_expected_content (list): liste af dictionaries som strenge med keys som vi forventer at finde i hver
+        linje af vores logfile liste
+
+    Returns:
+        bool: true, hvis alle dictionaries i vores streng indeholder alle de key's som vi som minimum forventer
+        fremgår
+        Ellers får vi en fejlmeddelelse
+    """
+
     # Logfile should be a list of dictionaries
     if not isinstance(logfile, list):
         raise TypeError("For logfile we expect a list.")
@@ -93,6 +141,45 @@ def has_expected_content(logfile, list_of_expected_content):
         return 'Something else went wrong.'
 
 def format_logfile(logfile):
+    """
+    Beskrivelse af funktionen:
+
+        Funktionens eneste opgave er at omforme en liste af strenge til en liste af dictionaries.
+
+        Vi gennemgår vores liste med strenge én linje af gangen.
+        Vi bruger et bibliotek kaldet shlex for at splitte vores strenge efter mellemrum. Shlex biblioteket er ment
+        til bash commands men dets plit funktion virker til vores formãl. Derfor bruger vi den.
+
+        Det smarte ved at bruge shlex.split() funktionen er, at vi for splittet vores streng efter mellemrum uden at
+        værdien af msg i hver linje også bliver splittet, idet mellemrum imellem hvert ord fremgår her.
+
+        På nuværende tidspunkt har vi stadig en liste bestående af lister af strenge, der nu ser således ud:
+        ['2026-03-01T08:01:17', 'level=INFO', 'event=LOGIN_SUCCESS', 'user=eve', ...]
+
+        Inden at vi laver key-value pairs og omformer til en liste af dictionaries, indsætter vi 'timestamp='
+        ['timestamp=2026-03-01T08:01:17', 'level=INFO', 'event=LOGIN_SUCCESS', 'user=eve', ...]
+
+        Nu kommer vi til at vi gerne vil omforme vores inderste liste af strenge til dictionaries.
+
+        Vi starter med at gennemgå hvert element (streng) i lister og splitte efter '='.
+        Vores liste og elementer ser da sådan her ud:
+        [['timestamp', '2026-03-01T08:01:17'], ['level', 'INFO'], ['event', 'LOGIN_SUCCESS'], ['user', 'eve'], ...]
+
+        Så finder vi key, value pairs sã alt til venstre for lighedstegnene er keys og alt til venstre er value for den
+        pågældende key. Der dannes en dictionary for hver linje i vores log-fil og disse dictionaries smides ind i en ny
+        tom liste som vi har lavet. Nedenfor ses et eksempel på en af disse dictionaries i den endelige liste:
+
+        {'timestamp': '2026-03-01T08:01:17', 'level': 'INFO', 'event': 'LOGIN_SUCCESS', 'user': 'eve', ...}
+
+        Det er denne liste, som funktionen returnerer hvis alt gik godt undervejs.
+
+    Args:
+        logfile (list): liste af strenge. Hver streng svarer til en log entry i den originale log-fil
+
+    Returns:
+        list: liste af dictionaries som indeholder data fra den originale log-fil
+    """
+    import shlex
 
     # Hvis logfil ikke er en liste, så alarmer brugeren om at vi forventer en liste
     if not isinstance(logfile, list):
@@ -103,7 +190,6 @@ def format_logfile(logfile):
         raise TypeError("All logs in the list must be strings.")
 
     try:
-        import shlex
         temp_logfile = logfile.copy()
         modified_logfile = []
 
@@ -127,12 +213,25 @@ def format_logfile(logfile):
         return "FEJL: Den valgte liste er tom."
 
 def open_logfile(path):
+    """
+    Beskrivelse af funktionen:
+
+    Funktionen åbner log-filen såfremt alt går godt. Hvis nogle af de fejl, som vi tjekker for opstår,
+    så får brugeren en fejlmeddelelse i konsollen.
+
+    Args:
+        path (str): relativ path til log-filen på brugerens system
+
+    Returns:
+        str: log-filens indhold i form af strenge repareret af linjeskift
+        Ellers får brugeren en fejlmeddelelse
+    """
     from pathlib import Path
 
     # Kontroller filendelse først
-    # Hvorfor? Fordi vi forventer en .txt fil med logdata
+    # Hvorfor? Fordi vi forventer en .txt fil med log-data
     if Path(path).suffix.lower() != ".txt":
-        return "Vælg venligst en .txt fil med logdata."
+        return "Vælg venligst en .txt fil med log-data."
 
     try:
         # hvis koden her nedenfor kører, så kan filen læses
