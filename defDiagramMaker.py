@@ -33,19 +33,22 @@ def scatterplot(conn,tabelname, xdata, ydata, parameter):
         """, (parameter,))
         data = cursor.fetchall()
         #print(data)
-        for tuple in data:
-            xakse.append(tuple[0])
-            yakse.append(tuple[1])
+        if data:
+            for tuple in data:
+                xakse.append(tuple[0])
+                yakse.append(tuple[1])
 
-        #laver selve plottet
-        plt.rcParams["figure.figsize"] = [20, 5]
-        plt.scatter(xakse, yakse)
-        plt.title(f"{xdata} in {parameter}")
-        plt.xlabel(xdata)
-        plt.ylabel(parameter)
+            #laver selve plottet
+            plt.rcParams["figure.figsize"] = [20, 5]
+            plt.scatter(xakse, yakse)
+            plt.title(f"{xdata} in {parameter}")
+            plt.xlabel(xdata)
+            plt.ylabel(parameter)
 
-        plt.show()
-        return True
+            plt.show()
+            return True
+        else:
+            print("parameter findes ikke")
     except Error as e:
         print(f"Scatterplot failed: {e}")
         return False
@@ -78,28 +81,31 @@ def scatterplotMedTendensLinje(conn,tabelname, xdata, ydata, parameter):
         """, (parameter,))
         data = cursor.fetchall()
         #print(data)
-        for tuple in data:
-            xakse.append(tuple[0])
-            yakse.append(tuple[1])
+        if data:
+            for tuple in data:
+                xakse.append(tuple[0])
+                yakse.append(tuple[1])
 
-        #laver selve plottet
-        x_numeric = list(range(len(xakse)))
+            #laver selve plottet
+            x_numeric = list(range(len(xakse)))
 
-        a, b = np.polyfit(x_numeric, yakse, 1)
+            a, b = np.polyfit(x_numeric, yakse, 1)
 
-        plt.rcParams["figure.figsize"] = [20, 5]
+            plt.rcParams["figure.figsize"] = [20, 5]
 
-        plt.scatter(x_numeric, yakse)
-        plt.plot(x_numeric, [a * x + b for x in x_numeric])
+            plt.scatter(x_numeric, yakse)
+            plt.plot(x_numeric, [a * x + b for x in x_numeric])
 
-        plt.title(f'{xdata} sat med {parameter}')
-        plt.xlabel(xdata)
-        plt.ylabel(parameter)
+            plt.title(f'{xdata} sat med {parameter}')
+            plt.xlabel(xdata)
+            plt.ylabel(parameter)
 
-        plt.xticks(x_numeric, xakse)
+            plt.xticks(x_numeric, xakse)
 
-        plt.show()
-        return True
+            plt.show()
+            return True
+        else:
+            print("parameter findes ikke")
     except Error as e:
         print(f"Scatterplot failed: {e}")
         return False
@@ -126,14 +132,17 @@ def piechart(conn,tabelname, coulum, titel):
                 """,)
         data = cursor.fetchall()
         # print(data)
-        for tuple in data:
-            labels.append(tuple[0])
-            count.append(tuple[1])
+        if data:
+            for tuple in data:
+                labels.append(tuple[0])
+                count.append(tuple[1])
 
-        plt.pie(count, labels=labels, autopct='%1.1f%%')
-        plt.title(titel)
-        plt.show()
-        return True
+            plt.pie(count, labels=labels, autopct='%1.1f%%')
+            plt.title(titel)
+            plt.show()
+            return True
+        else:
+            print("kolonne findes ikke")
     except Error as e:
         print(f"Scatterplot failed: {e}")
         return False
@@ -162,14 +171,17 @@ def piechartspecefic(conn,tabelname, coulum, titel, coulum2,parameter):
                 """,(parameter,))
         data = cursor.fetchall()
         # print(data)
-        for tuple in data:
-            labels.append(tuple[0])
-            count.append(tuple[1])
+        if data:
+            for tuple in data:
+                labels.append(tuple[0])
+                count.append(tuple[1])
 
-        plt.pie(count, labels=labels, autopct='%1.1f%%')
-        plt.title(titel)
-        plt.show()
-        return True
+            plt.pie(count, labels=labels, autopct='%1.1f%%')
+            plt.title(titel)
+            plt.show()
+            return True
+        else:
+            print("parameter findes ikke")
     except Error as e:
         print(f"Scatterplot failed: {e}")
         return False
@@ -205,19 +217,22 @@ def barchart(conn,tabelname, xdata, ydata, parameter):
         """, (parameter,))
         data = cursor.fetchall()
         #print(data)
-        for tuple in data:
-            xakse.append(tuple[0])
-            yakse.append(tuple[1])
+        if data:
+            for tuple in data:
+                xakse.append(tuple[0])
+                yakse.append(tuple[1])
 
-        #laver selve plottet
-        plt.rcParams["figure.figsize"] = [20, 5]
-        plt.bar(xakse, yakse)
-        plt.title(f"{xdata} in {parameter}")
-        plt.xlabel(xdata)
-        plt.ylabel(parameter)
+            #laver selve plottet
+            plt.rcParams["figure.figsize"] = [20, 5]
+            plt.bar(xakse, yakse)
+            plt.title(f"{xdata} in {parameter}")
+            plt.xlabel(xdata)
+            plt.ylabel(parameter)
 
-        plt.show()
-        return True
+            plt.show()
+            return True
+        else:
+            print("Parameter findes ikke")
     except Error as e:
         print(f"Barchart failed: {e}")
         return False

@@ -318,6 +318,8 @@ def handle_submenu_4_actions(conn, choice: str):
         data = input("Hvilken kolonne skal der laves piechart på (fx: level, event, src_ip, timestamp, user, status: ")
         if piechart(conn, tablename, data, data):
             console.print("\n[bold cyan]Piechart dannet i andet vindue[/]\n")
+        else:
+            print("piechart failed")
 
     elif choice == "2":
         console.print("\n[bold cyan]Dannelse af en specefik Piechart[/]\n")
@@ -340,6 +342,8 @@ def handle_submenu_4_actions(conn, choice: str):
             searchKriteria = input("Indtast et af ovenstående søgekriterier: ")
             if piechartspecefic(conn, tablename, data,f"{data} in {searchKriteria}" ,data2, searchKriteria):
                 print("Piechart lavet i andet vindue ")
+            else:
+                print("Piechart failed")
         else:
             print(f"table {tablename} eller {data2} findes ikke")
 
@@ -368,9 +372,13 @@ def handle_submenu_4_actions(conn, choice: str):
                 if tendenslinje == "ja":
                     if scatterplotMedTendensLinje(conn,tablename,xdata,ydata,parameter):
                         print("Scatterplot med tendenslinje nyt vindue: ")
+                    else:
+                        print("Scatterplot med tendenslinje failed")
                 elif tendenslinje == "nej":
                     if scatterplot(conn,tablename,xdata,ydata,parameter):
                         print("Scatterplot uden tendenslinje nyt vindue: ")
+                    else:
+                        print("Scatterplot uden tendenslinje failed")
             else:
                 print(f"Tabel {tablename} eller {ydata} findes ikke - muligvis tastefejl")
         else:
@@ -411,6 +419,8 @@ def handle_submenu_4_actions(conn, choice: str):
             parameter = input("Indtast den parameter du ønsker at se: ")
             if barchart(conn, tablename, xdata, ydata, parameter):
                 print("Barchart lavet i andet vindue")
+            else:
+                print("Barchart failed")
         else:
             print(f"table {tablename} eller {ydata} findes ikke")
 
