@@ -31,7 +31,8 @@ Vi har gjort brug af Jira som vores task board til at organisere projektets fors
 ## 3. Konklusion
 Placeholder text
 ***
-
+for at installere alle requirements for projektet
+pip install -r /path/to/requirements.txt -f file:///path/to/archive/
 
 
 

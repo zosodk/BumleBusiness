@@ -143,36 +143,6 @@ def fetch_logdata_double(conn, col1: str, val1: str, col2: str, val2: str):
     cursor.execute(query, (val1, val2))
     return cursor.fetchall()
 
-def console_print_list(items: list, title: str = "Udvidet søgning"):
-    console = Console()
-
-    menu_table = Table(
-        show_header=False,
-        box=None,
-        padding=(1, 1),
-        expand=True
-    )
-    for n in range(1,4):
-        menu_table.add_column(f"Resultat {n}", justify="center",ratio=1, overflow="fold")
-
-
-    for i in range(0, len(items), 3):
-        row = items[i:i + 3]
-
-        menu_table.add_row(
-            *[str(item) for item in row],
-        )
-
-    panel = Panel(
-        menu_table,
-        title=f"[bold black on white] {title} [/]",
-        box=box.DOUBLE,
-        border_style="bright_cyan",
-        padding=(1, 1),
-        expand=True
-    )
-
-    console.print(panel)
 
 def magic_print_list(items: list, title: str = "Opslag i database: "):
 

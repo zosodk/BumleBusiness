@@ -244,7 +244,6 @@ def historyCreater(conn,tabelname, coulum, valueInCoulum, parameter):
 
         for row in rows:
             ts_str = row[1]
-            print(ts_str)
             try:
                 # Forsøger standard ISO/SQL-format
                 dt = datetime.fromisoformat(ts_str)
@@ -294,7 +293,7 @@ def historyCreater(conn,tabelname, coulum, valueInCoulum, parameter):
             )
 
             plt.title(
-              f'{parameter} for {coulum} : {valueInCoulum} (taken from database)', fontsize=14
+              f'{parameter} for {coulum} : {valueInCoulum}', fontsize=14
             )
 
             plt.xlabel('timestamp', fontsize=12)

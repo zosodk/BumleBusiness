@@ -1,7 +1,7 @@
 from defDbHandler import connect_to_db, fetch_all_from_table, tabel_cleaner, insert_logdata,fetch_distinct_from_table, fetch_all_from_table, fetch_coloumns_table
 from defFileHandler import open_logfile, parse_logfile_data
 from defInit import init_db
-from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, fetch_logdata_double, magic_print_list, console_print_list
+from defGUI import console, clear_screen, draw_dos_box, ask_menu_choice, show_log_table, fetch_logdata_single, fetch_logdata_double, magic_print_list
 from defDiagramMaker import *
 
 
@@ -192,7 +192,8 @@ def handle_submenu_3_actions(conn, choice: str):
             items = []
             for item in parameters:
                 items.append(item[0])
-            console_print_list(items)
+            #console_print_list(items)
+            magic_print_list(items)
 
             ipaddr = input(f"Indtast den ip-adresse du ønsker historik over eventsne: ").strip()
         else:
@@ -205,7 +206,8 @@ def handle_submenu_3_actions(conn, choice: str):
             items = []
             for item in parameters:
                 items.append(item[0])
-            console_print_list(items)
+            #console_print_list(items)
+            magic_print_list(items)
 
             events = input(f"hvilke events vil du gerne have historik over ").strip().upper()
             rows = fetch_logdata_double(conn,"src_ip", ipaddr,"event",events)
@@ -225,7 +227,8 @@ def handle_submenu_3_actions(conn, choice: str):
             items = []
             for item in parameters:
                 items.append(item[0])
-            console_print_list(items)
+            #console_print_list(items)
+            magic_print_list(items)
 
             ipaddr = input(f"Indtast den ip-adresse du ønsker historik over level: ").strip()
         else:
@@ -290,8 +293,8 @@ def handle_submenu_3_actions(conn, choice: str):
             #console_print_list(items)
             magic_print_list(items)
 
-            events = input(f"hvilke levels vil du gerne have historik over ").strip().upper()
-            rows = fetch_logdata_double(conn,"src_ip", ipaddr,"level",events)
+            events = input(f"hvilke events vil du gerne have historik over ").strip().upper()
+            rows = fetch_logdata_double(conn,"src_ip", ipaddr,"event",events)
             if len(rows) > 0:
                 show_log_table(rows, f"Oversigt over ip historik for {ipaddr} og forbundet med level {events}")
             else:
@@ -350,13 +353,16 @@ def handle_submenu_4_actions(conn, choice: str):
             result = fetch_coloumns_table(conn, tablename)
             magic_print_list(result)
             xdata = input("Indtast hvilken kolonne du ønsker på x aksen:  ")
+
+            magic_print_list(result)
             ydata = input("Indtast hvilken kolonne du ønsker at trække data ud fra: ")
             parameters = fetch_distinct_from_table(conn, tablename,ydata)
             print("\nHer er et udvalg af dine mulige parametre: ")
             items = []
             if parameters:
                 for item in parameters:
-                    items.append(item[0])                    #console_print_list(items)
+                    items.append(item[0])
+                    #console_print_list(items)
                 magic_print_list(items)
                 parameter = input("Indtast den parameter du ønsker at se: ")
                 if tendenslinje == "ja":
@@ -385,9 +391,14 @@ def handle_submenu_4_actions(conn, choice: str):
             plot_ip_activity(conn, ipaddr)
 
     elif choice == "5":
-        tablename = input("Indtast hvilket table du vil have data fra ")
-        xdata = input("Indtast hvilken kolonne du gerne vil have ad x aksen ")
-        ydata = input("Indtast hvilken kollone du gerne vil hive en data ud fra ")
+        #tablename = input("Indtast hvilket table du vil have data fra ")
+        tablename = "logdata"
+        result = fetch_coloumns_table(conn, tablename)
+        magic_print_list(result)
+        xdata = input("Indtast hvilken kolonne du ønsker at trække data ud langs X-aksen: ")
+
+        magic_print_list(result)
+        ydata = input("Indtast hvilken kolonne du ønsker at trække data ud fra: ")
 
         parameters = fetch_distinct_from_table(conn, tablename, ydata)
         if parameters:
@@ -397,28 +408,31 @@ def handle_submenu_4_actions(conn, choice: str):
                 items.append(item[0])
             #console_print_list(items)
             magic_print_list(items)
-            parameter = input("indtast dataen du gerne vil se ")
+            parameter = input("Indtast den parameter du ønsker at se: ")
             if barchart(conn, tablename, xdata, ydata, parameter):
-                print("Barchar lavet i plots")
+                print("Barchart lavet i andet vindue")
         else:
             print(f"table {tablename} eller {ydata} findes ikke")
 
 
     elif choice == "6":
-        tablename = input("indtast hvilket table du vil have data fra ")
-        coulum = input("indtast kolonnen for dataen du gerne vil lave en historik fra ")
+        #tablename = input("indtast hvilket table du vil have data fra ")
+        tablename = "logdata"
+        result = fetch_coloumns_table(conn, tablename)
+        magic_print_list(result)
+        coulum = input("Indtast hvilken kolonne du ønsker at trække data ud fra: ")
 
         parameters = fetch_distinct_from_table(conn, tablename, coulum)
         if parameters:
-            print("\nher er et udvalg af dine parameter")
+            print("\nHer er en oversigt over dine parametre: ")
             items = []
             for item in parameters:
                 items.append(item[0])
             #console_print_list(items)
             magic_print_list(items)
 
-            value = input("indtast hvilken data der skal laves historik fra ")
-            parameter = input("indtast hvilken kolonne du gerne vil se i sammenhæng med den valgte data ")
+            value = input("Indtast den parameter du ønsker at se: ")
+            parameter = input("Indtast hvilken kolonne du ønsker at se i sammenhæng med dine valg: ")
             if historyCreater(conn,tablename,coulum, value, parameter):
                 print("historik er lavet i plots")
         else:
