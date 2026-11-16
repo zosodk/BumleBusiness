@@ -76,7 +76,7 @@ Dette statisk genererede layout tog vi efterfølgende udgangspunkt i og modifice
 ## 4. Konklusion og Analyse af logs
 
 Det færdige projekt lever fuldt ud op til de opstillede krav for Bumle Business' VPN-log overvågning:
-* Vi kan se, jvf vores tabelvisninger og diverse diagrammer, at systemet rammes af et brute-force angreb om morgenen og i løbet af dagen, da får forskellige brugere hacket deres konti, ændret deres password. Til sidst kan vi se, at admin får ændret sit password. Så hele systemet er overtaget af udefrakommende på sysadmin niveau.
+* Vi kan se, jvf vores tabelvisninger og diverse diagrammer, at systemet rammes af et brute-force angreb om morgenen og i løbet af dagen, da får forskellige brugere hacket deres konti, ændret deres password. Så hele systemet er overtaget af udefrakommende på sysadmin niveau.
 * Først går vi ip-adresser igennem i vores program og finder følgende ip: 198.51.100.23 som vi finder interessant, da ip-adressen forsøger med mange brugernavne og både fejler og lykkedes med nogle, ændre password, placerer malware
   ![tabel_bruteforce.png](grafik/tabel_bruteforce.png)
 * Hvis vi herefter kigger på brugeren admin, da kan vi se, at administrator kontoen meget tidligt får nulstillet sin admin adgangskode og senere kan vi se, at en forsøger at logge på, eller eskalere sine rettigheder til admin. Hvilket nok er den rigtige administrator, der ikke længere kan komme ind med sin adgangskode. Dvs systemet er overtaget
