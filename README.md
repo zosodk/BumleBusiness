@@ -73,9 +73,8 @@ Dette statisk genererede layout tog vi efterfølgende udgangspunkt i og modifice
 
 ---
 
-## 4. Konklusion og Analyse af logs
+## 4 Analyse af logs
 
-Det færdige projekt lever fuldt ud op til de opstillede krav for Bumle Business' VPN-log overvågning:
 * Vi kan se, jvf vores tabelvisninger og diverse diagrammer, at systemet rammes af et brute-force angreb om morgenen og i løbet af dagen, da får forskellige brugere hacket deres konti, ændret deres password. Så hele systemet er overtaget af udefrakommende på sysadmin niveau.
 * Først går vi ip-adresser igennem i vores program og finder følgende ip: 198.51.100.23 som vi finder interessant, da ip-adressen forsøger med mange brugernavne og både fejler og lykkedes med nogle, ændre password, placerer malware
   ![tabel_bruteforce.png](grafik/tabel_bruteforce.png)
@@ -87,10 +86,12 @@ Det færdige projekt lever fuldt ud op til de opstillede krav for Bumle Business
   ![scatterplot_bruteforce.png](grafik/scatterplot_bruteforce.png)
 * Vi kan derfor konkludere, vha af vores program, at Bumle Business er offer for et bruteforce angreb fra minimim to ip-adresser, hvor det lykkedes at overtage hele systemet, ændre på sikkerhedsregler, placering af malware, adgang til filservere, postservere, id-servere oma.
   
-
+## 5 Konklusion
+Det færdige projekt lever fuldt ud op til de opstillede krav for Bumle Business' VPN-log overvågning:
 * Modulær kodestruktur: Koden er opdelt i logiske moduler (`main.py`, `defInit.py`, `defDbHandler.py`, `defFileHandler.py`, `defGUI.py` og `defDiagramMaker.py`), hvilket sikrer høj genbrugbarhed og let vedligeholdelse.
 * Robusthed: Der er implementeret fejlhåndtering (`try-except` blokke) og fejlhåndterings mekanismer ved indlæsning af filer og databaseoperationer.
 * Visualisering og analyse: Systemet gør det muligt både at vise rå og strukturerede tabeller i konsollen samt generere dybdegående grafer (scatter-plots med/uden tendenslinjer, pie-charts og bar-charts) til analyse af sikkerhedshændelser
+* Vi kan analysere logdata og drage konklusioner ved hjælp af vores værktøj
 
 ### Forbedringsmuligheder
 * Vi har en feature i vores backlog, der omhandlede programmets mulighed for at akkumulere logdata, indlæsning af flere filer. Samt, som tidligere nævnt, havde vi et ønske om, at vi kunne konfigurere programmet med godkendte brugernavne, kendte servere/pc'er/godkendte porte, event-typer osv. Denne ambition lagde vi på hylden i sprint
