@@ -17,12 +17,23 @@ os.environ.setdefault("COLORTERM", "truecolor")
 console = Console(force_terminal=True, color_system="truecolor", width=180)
 
 def clear_screen():
+    """
+    gøre skærmen rent
+    :return:
+    """
     os.system("cls" if os.name == "nt" else "clear")
     console.clear()
 
 
 def draw_dos_box(title: str, subtitle: str, menu_items: list[tuple[str, str, str]], border_color: str = "bright_cyan"):
-    """Tegner DOS-rammen ud fra (nr_str, menuitem, description)."""
+    """
+    Tegner DOS-rammen ud fra (nr_str, menuitem, description).
+
+    :param title
+    :param subtitle
+    :param menu_items
+    :param border_color
+    """
     clear_screen()
 
     menu_table = Table(show_header=False, box=None, padding=(0, 2))
@@ -46,6 +57,13 @@ def draw_dos_box(title: str, subtitle: str, menu_items: list[tuple[str, str, str
 
 
 def ask_menu_choice(prompt_text: str, valid_choices: list[str], default_choice: str = "0") -> str:
+    """
+    tjekker om den choice om table er en valid choice
+    :param prompt_text:
+    :param valid_choices:
+    :param default_choice:
+    :return:
+    """
     default_val = default_choice if default_choice in valid_choices else valid_choices[0]
     return Prompt.ask(
         f"\n[bold yellow]{prompt_text}[/]",
@@ -56,6 +74,12 @@ def ask_menu_choice(prompt_text: str, valid_choices: list[str], default_choice: 
 
 
 def show_log_table(db_rows: list[tuple], title: str = "Cyber security Log (SQLite)"):
+    """
+    laver en meget overskuelig måde at se logdata tabellen
+
+    :param db_rows
+    :param title
+    """
     table = Table(title=title, box=box.DOUBLE_EDGE, header_style="bold cyan", width=180)
     table.add_column("ID", style="dim", justify="right")
     table.add_column("Timestamp")
@@ -91,6 +115,9 @@ def fetch_logdata_single(conn, column: str, value: str):
     """
     Søger i logdata efter én specifik parameter (f.eks. src_ip eller user).
     Eksempel: fetch_logdata_single(conn, "src_ip", "198.51.100.23")
+    :param conn
+    :param column
+    :param value
     """
     cursor = conn.cursor()
     # Sikkerhedscheck på kolonnenavn for at undgå forkerte anvisninger
