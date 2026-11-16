@@ -239,8 +239,6 @@ def historyCreater(conn,tabelname, coulum, valueInCoulum, parameter):
 
         cur.execute(f"SELECT * FROM {tabelname} WHERE {coulum} = ?", (valueInCoulum,))
         rows = cur.fetchall()
-        # Luk forbindelsen
-        conn.close()
 
         for row in rows:
             ts_str = row[1]
