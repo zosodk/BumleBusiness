@@ -76,9 +76,10 @@ Dette statisk genererede layout tog vi efterfølgende udgangspunkt i og modifice
 ## 4. Konklusion
 
 Det færdige projekt lever fuldt ud op til de opstillede krav for Bumle Business' VPN-log overvågning:
-* **Modulær kodestruktur:** Koden er opdelt i logiske moduler (`main.py`, `defInit.py`, `defDbHandler.py`, `defFileHandler.py`, `defGUI.py` og `defDiagramMaker.py`), hvilket sikrer høj genbrugbarhed og let vedligeholdelse.
-* **Robusthed:** Der er implementeret fejlhåndtering (`try-except` blokke) og fejlhåndterings mekanismer ved indlæsning af filer og databaseoperationer.
-* **Visualisering og analyse:** Systemet gør det muligt både at vise rå og strukturerede tabeller i konsollen samt generere dybdegående grafer (scatter-plots med/uden tendenslinjer, pie-charts og bar-charts) til analyse af sikkerhedshændelser
+* Vi kan se, jvf vores tabelvisninger og diverse diagrammer, at systemet rammes af et brute-force angreb om morgenen og i løbet af dagen, da får forskellige brugere hacket deres konti, ændret deres password. Til sidst kan vi se, at admin får ændret sit password. Så hele systemet er overtaget af udefrakommende på sysadmin niveau.
+* Modulær kodestruktur: Koden er opdelt i logiske moduler (`main.py`, `defInit.py`, `defDbHandler.py`, `defFileHandler.py`, `defGUI.py` og `defDiagramMaker.py`), hvilket sikrer høj genbrugbarhed og let vedligeholdelse.
+* Robusthed: Der er implementeret fejlhåndtering (`try-except` blokke) og fejlhåndterings mekanismer ved indlæsning af filer og databaseoperationer.
+* Visualisering og analyse: Systemet gør det muligt både at vise rå og strukturerede tabeller i konsollen samt generere dybdegående grafer (scatter-plots med/uden tendenslinjer, pie-charts og bar-charts) til analyse af sikkerhedshændelser
 
 ### Forbedringsmuligheder
 * Vi har en feature i vores backlog, der omhandlede programmets mulighed for at akkumulere logdata, indlæsning af flere filer. Samt, som tidligere nævnt, havde vi et ønske om, at vi kunne konfigurere programmet med godkendte brugernavne, kendte servere/pc'er/godkendte porte, event-typer osv. Denne ambition lagde vi på hylden i sprint
@@ -106,7 +107,8 @@ Herunder ses eksempler på, hvordan programmet tager sig ud i terminalen under k
 
 ![Visning_tabel.png](grafik/Visning_tabel.png)
 
-
+### Visning af diagrammer (piechart, scatterplots, barchart) - scatterplot screenshot:
+![scatterplot.png](grafik/scatterplot.png)
 ## Installation og Kørsel
 
 For at installere alle nødvendige afhængigheder (som angivet i `requirements.txt`), kan du køre følgende kommando i din terminal:
