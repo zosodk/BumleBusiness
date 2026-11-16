@@ -211,12 +211,25 @@ def historyCreater(conn,tabelname, coulum, valueInCoulum, parameter):
         searchList = []
 
         cur.execute(f"SELECT * FROM {tabelname} WHERE {coulum} = ?", (valueInCoulum,))
-        df = cur.fetchall()
+        rows = cur.fetchall()
         # Luk forbindelsen
         conn.close()
 
+        for row in rows:
+            ts_str = row[1]
+            print(ts_str)
+            try:
+                # Forsøger standard ISO/SQL-format
+                dt = datetime.fromisoformat(ts_str)
+            except ValueError:
+                # Fallback til typisk SQL-tidsformat ('YYYY-MM-DD HH:MM:SS')
+                dt = datetime.strptime(ts_str, '%Y-%m-%d %H:%M:%S')
+
+            timestamp.append(dt)
+
+
         # Tjek om der er data
-        if len(df) <= 0:
+        if not rows:
           print('Ingen data fundet for denne IP-adresse.')
         else:
           # Konverter tidskolonnen til datetime-objekter
@@ -235,8 +248,7 @@ def historyCreater(conn,tabelname, coulum, valueInCoulum, parameter):
                 paramIndex = 7
             elif parameter == "msg":
                 paramIndex = 8
-            for tuple in df:
-                timestamp.append(tuple[1])
+            for tuple in rows:
                 searchList.append(tuple[paramIndex])
 
 
