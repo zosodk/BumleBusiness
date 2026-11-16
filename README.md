@@ -73,7 +73,7 @@ Dette statisk genererede layout tog vi efterfølgende udgangspunkt i og modifice
 
 ---
 
-## 4 Analyse af logs
+## 4. Analyse af logs
 
 * Vi kan se, jvf vores tabelvisninger og diverse diagrammer, at systemet rammes af et brute-force angreb om morgenen og i løbet af dagen, da får forskellige brugere hacket deres konti, ændret deres password. Så hele systemet er overtaget af udefrakommende på sysadmin niveau.
 * Først går vi ip-adresser igennem i vores program og finder følgende ip: 198.51.100.23 som vi finder interessant, da ip-adressen forsøger med mange brugernavne og både fejler og lykkedes med nogle, ændre password, placerer malware
@@ -86,7 +86,7 @@ Dette statisk genererede layout tog vi efterfølgende udgangspunkt i og modifice
   ![scatterplot_bruteforce.png](grafik/scatterplot_bruteforce.png)
 * Vi kan derfor konkludere, vha af vores program, at Bumle Business er offer for et bruteforce angreb fra minimim to ip-adresser, hvor det lykkedes at overtage hele systemet, ændre på sikkerhedsregler, placering af malware, adgang til filservere, postservere, id-servere oma.
   
-## 5 Konklusion
+## 5. Konklusion
 Det færdige projekt lever fuldt ud op til de opstillede krav for Bumle Business' VPN-log overvågning:
 * Modulær kodestruktur: Koden er opdelt i logiske moduler (`main.py`, `defInit.py`, `defDbHandler.py`, `defFileHandler.py`, `defGUI.py` og `defDiagramMaker.py`), hvilket sikrer høj genbrugbarhed og let vedligeholdelse.
 * Robusthed: Der er implementeret fejlhåndtering (`try-except` blokke) og fejlhåndterings mekanismer ved indlæsning af filer og databaseoperationer.
@@ -99,7 +99,7 @@ Det færdige projekt lever fuldt ud op til de opstillede krav for Bumle Business
 
 ---
 
-## 5. Systemets Brugerflade (Screenshots)
+## 6. Systemets Brugerflade (Screenshots)
 
 Herunder ses eksempler på, hvordan programmet tager sig ud i terminalen under kørsel:
 
